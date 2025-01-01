@@ -79,4 +79,4 @@ The home lab is designed for DevOps practice and includes:
 1. Configure additional virtual machines for staging and production environments.
 2. Set up infrastructure as code with Terraform and Ansible.
 3. Automate application deployments using Jenkins pipelines.
-4. Add more containers and manage orchestration through kubernetes
+4. Deploy more containers and orchestrate them using Kubernetes
