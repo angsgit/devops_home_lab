@@ -57,7 +57,7 @@ The home lab is designed for DevOps practice and includes:
 - [x] Set up vCenter Server and ESXi Host.
 - [x] Created control VM with Ubuntu Server.
 - [x] Installed Jenkins and linked to GitHub.
-- [ ] Deploy pipelines for automated builds and deployments.
+- [x] Deploy pipelines for automated builds and deployments.
 
 ## Future Steps
 1. Configure additional virtual machines for staging and production environments.
