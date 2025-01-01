@@ -5,20 +5,15 @@
 Objective: Build a DevOps-focused environment for learning and practice.
 
 ## Flow Summary
-vCenter Server
-    ↓ (manages)
-ESXi Host
-    ↓ (runs)
-Control VM
-    ↓ (hosts)
-Docker
-    ↓ (hosts)
-Jenkins
-    ↓ (triggered by webhooks)
-GitHub
-    ↓ (triggers pipelines)
-AWS S3
-    (Jenkins deploys to AWS S3 for application storage or configuration updates)
+- **vCenter Server**
+  - Manages → **ESXi Host**
+    - Runs → **Control VM**
+      - Hosts → **Docker**
+        - Hosts → **Jenkins**
+          - Triggered by webhooks from → **GitHub**
+            - Triggers pipelines to → **AWS S3**
+              - Jenkins deploys to AWS S3 for application storage or configuration updates
+
 
 Key Components:
 
