@@ -48,6 +48,10 @@ The home lab is designed for DevOps practice and includes:
 - **Jenkins**: Manages pipelines and automation tasks in the CI/CD lifecycle.
 - **GitHub Repositories**: Stores code and integrates with Jenkins for builds.
 
+## Secrets
+- All secrets stored in github and jenkins credential managers for security
+- No hardcoded secrets anywhere :)
+
 ## Goals
 - Deploy a full DevOps lifecycle in the home lab.
 - Practice automation and CI/CD workflows.
