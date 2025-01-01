@@ -4,20 +4,35 @@ pipeline {
     environment {
         AWS_ACCESS_KEY_ID = credentials('aws-access-key-id') // Reference AWS Access Key
         AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key') // Reference AWS Secret Key
-        AWS_REGION = credentials ('aws-region') // your AWS region
-        BUCKET_NAME = 'angad-dev' // s3 bucket name
+        AWS_REGION = credentials('aws-region') // AWS region
+        BUCKET_NAME = 'angad-dev' // S3 bucket name
     }
 
     stages {
+        stage('Check S3 Bucket') {
+            steps {
+                script {
+                    def bucketExists = sh(
+                        script: "aws s3api head-bucket --bucket ${BUCKET_NAME} 2>/dev/null && echo 'exists' || echo 'not-exists'",
+                        returnStdout: true
+                    ).trim()
+
+                    if (bucketExists == 'exists') {
+                        echo "Bucket ${BUCKET_NAME} already exists. Skipping remaining stages."
+                        currentBuild.result = 'SUCCESS' // Mark as successful and skip
+                        error('Skipping pipeline as bucket already exists.') // Stop further stages
+                    } else {
+                        echo "Bucket ${BUCKET_NAME} does not exist. Proceeding with creation."
+                    }
+                }
+            }
+        }
+
         stage('Create S3 Bucket') {
             steps {
                 sh """
-                if ! aws s3api head-bucket --bucket ${BUCKET_NAME} 2>/dev/null; then
-                    aws s3api create-bucket --bucket ${BUCKET_NAME} --region ${AWS_REGION} --create-bucket-configuration LocationConstraint=${AWS_REGION}
-                    echo "Bucket ${BUCKET_NAME} created successfully."
-                else
-                    echo "Bucket ${BUCKET_NAME} already exists."
-                fi
+                aws s3api create-bucket --bucket ${BUCKET_NAME} --region ${AWS_REGION} --create-bucket-configuration LocationConstraint=${AWS_REGION}
+                echo "Bucket ${BUCKET_NAME} created successfully."
                 """
             }
         }
