@@ -15,7 +15,8 @@ Objective: Build a DevOps-focused environment for learning and practice.
               - Jenkins deploys to AWS S3 for application storage or configuration updates
 
 
-Key Components:
+
+## Key Components:
 
 vCenter Server & ESXi Host: Manage virtual machines.
 Control Machine (Ubuntu): Centralized automation node.
