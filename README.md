@@ -5,11 +5,7 @@
 Objective: Build a DevOps-focused environment for learning and practice.
 
 # Flow Summary
-vCenter Server manages ESXi Host.
-ESXi Host runs the Control VM.
-The Control VM runs Docker, which hosts Jenkins.
-GitHub triggers Jenkins pipelines via webhooks.
-Jenkins deploys to AWS S3 for application storage or configuration updates.
+vCenter Server manages ESXi Host >>> ESXi Host runs the Control VM >>> The Control VM runs Docker, which hosts Jenkins >>> GitHub triggers Jenkins pipelines via webhooks >>> Jenkins deploys to AWS S3 for application storage or configuration updates.
 
 Key Components:
 
