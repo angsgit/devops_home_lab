@@ -9,30 +9,16 @@ pipeline {
     }
 
     stages {
-        stage('Check S3 Bucket') {
-            steps {
-                script {
-                    def bucketExists = sh(
-                        script: "aws s3api head-bucket --bucket ${BUCKET_NAME} 2>/dev/null && echo 'exists' || echo 'not-exists'",
-                        returnStdout: true
-                    ).trim()
-
-                    if (bucketExists == 'exists') {
-                        echo "Bucket ${BUCKET_NAME} already exists. Skipping remaining stages."
-                        currentBuild.result = 'SUCCESS'
-                        error('Bucket already exists, stopping pipeline.') // Gracefully stop pipeline
-                    } else {
-                        echo "Bucket ${BUCKET_NAME} does not exist. Proceeding with creation."
-                    }
-                }
-            }
-        }
-
-        stage('Create S3 Bucket') {
+        stage('Check and Create S3 Bucket') {
             steps {
                 sh """
-                aws s3api create-bucket --bucket ${BUCKET_NAME} --region ${AWS_REGION} --create-bucket-configuration LocationConstraint=${AWS_REGION}
-                echo "Bucket ${BUCKET_NAME} created successfully."
+                if aws s3api head-bucket --bucket ${BUCKET_NAME} 2>/dev/null; then
+                    echo "Bucket ${BUCKET_NAME} already exists. Skipping creation."
+                else
+                    echo "Bucket ${BUCKET_NAME} does not exist. Creating it now."
+                    aws s3api create-bucket --bucket ${BUCKET_NAME} --region ${AWS_REGION} --create-bucket-configuration LocationConstraint=${AWS_REGION}
+                    echo "Bucket ${BUCKET_NAME} created successfully."
+                fi
                 """
             }
         }
