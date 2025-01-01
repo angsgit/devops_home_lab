@@ -9,7 +9,7 @@ Objective: Build a DevOps-focused environment for learning and practice.
   - Manages → **ESXi Host**
     - Runs → **Control VM**
       - Hosts → **Docker**
-        - Hosts → **Jenkins**
+        - Container → **Jenkins**
           - Triggered by webhooks from → **GitHub**
             - Triggers pipelines to → **AWS S3**
               - Jenkins deploys to AWS S3 for application storage or configuration updates
