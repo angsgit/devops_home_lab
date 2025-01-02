@@ -69,7 +69,7 @@ The home lab is designed for DevOps practice and includes:
 - Deploy a full DevOps lifecycle in the home lab.
 - Practice automation and CI/CD workflows.
 - Learn and experiment with infrastructure as code tools.
-- Learn/ practise containers(docker) and orchestration (kubernetes)
+- Learn/ practice containers(docker) and orchestration (kubernetes)
 
 ## Current Progress
 - [x] Set up vCenter Server and ESXi Host.
