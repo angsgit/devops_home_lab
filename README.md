@@ -8,7 +8,7 @@ Objective: Build a DevOps-focused environment for learning and practice.
 - **vCenter Server**
   - Manages → **ESXi Host**
     - Runs → **Control VM**
-      - VM Creation - **Ansible**
+      - VM Creation → **Ansible**
         - VM's Hosts → **Docker**
           - Container → **Jenkins**
             - Triggered by webhooks from → **GitHub**
