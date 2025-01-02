@@ -62,8 +62,8 @@ The home lab is designed for DevOps practice and includes:
 - **GitHub Repositories**: Stores code and integrates with Jenkins for builds.
 
 ## Secrets
-- All secrets stored in github and jenkins credential managers for security
-- No hardcoded secrets anywhere :)
+- All secrets stored in github secrets / jenkins credential managers / ansible vaults and so on...for security
+- No hardcoded secrets anywhere, i hope! :)
 
 ## Goals
 - Deploy a full DevOps lifecycle in the home lab.
