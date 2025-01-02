@@ -10,9 +10,8 @@
 - Ansible VMware Collection: The community.vmware Ansible collection must be installed.
 
     - If not already installed, inside your Ansible container:
+        container_name collection install community.vmware
 
-    - container_name collection install community.vmware
-    
     ---
 
 # Template VM: Prepare a template VM or ISO on your ESXi/vCenter that can be used to deploy the new VM.
