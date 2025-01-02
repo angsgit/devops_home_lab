@@ -8,11 +8,11 @@ Objective: Build a DevOps-focused environment for learning and practice.
 - **vCenter Server**
   - Manages → **ESXi Host**
     - Runs → **Control VM**
-      - VM Creation → **Ansible**
-        - VM's Hosts → **Docker**
-          - Container → **Jenkins**
+      - VM Hosts → **Docker**
+        - Container CICD → **Jenkins**
+          - Container IaC → **Ansible**
             - Triggered by webhooks from → **GitHub**
-              - Triggers pipelines to → **AWS S3**
+              - Triggers pipelines to → **AWS S3**/**Dev**/**Prod**
                 - Jenkins deploys to AWS S3 for application storage or configuration updates
 
 
