@@ -76,6 +76,9 @@ The home lab is designed for DevOps practice and includes:
 - [x] Created control VM with Ubuntu Server.
 - [x] Installed Jenkins and linked to GitHub.
 - [x] Deploy pipelines for automated builds and deployments.
+- [x] Deploy Jenkins in containers.
+- [x] Deploy Ansible in containers.
+- [x] Deploy infra with Ansible.
 
 ## Future Steps
 1. Configure additional virtual machines for staging and production environments.
