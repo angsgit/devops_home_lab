@@ -7,9 +7,10 @@
    
 2. Create a file named `Dockerfile`:
    
-   nano Dockerfile
+   vim Dockerfile
    
 3. Add the following content to the `Dockerfile`:
+
    dockerfile
    FROM ubuntu:20.04
 
@@ -62,7 +63,7 @@ docker run -it --entrypoint /bin/bash ansible-image
    
 2. Create the `inventory.yml` file:
    
-   vi inventory.yml
+   vim inventory.yml
    
 3. Add the following content:
    yaml
@@ -78,7 +79,7 @@ docker run -it --entrypoint /bin/bash ansible-image
 ## Step 5: Create a Test Playbook
 1. In the same `/ansible` directory, create the `test-playbook.yml` file:
    
-   vi test-playbook.yml
+   vim test-playbook.yml
    
 2. Add the following content:
    yaml
