@@ -11,9 +11,9 @@ pipeline {
         stage('Deploy to Synology NAS') {
             steps {
                 script {
-                    // Copy all files in the current folder to the NAS
+                    // Copy all files in the current folder to the NAS, user 'deploy' for the nas
                     sh """
-                    scp -r ./* jenkins-deployer@192.168.1.4:/volume1/web/portfolio/
+                    scp -r ./* deploy@192.168.1.4:/volume1/web/portfolio/
                     """
                 }
             }
