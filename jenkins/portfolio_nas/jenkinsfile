@@ -1,0 +1,33 @@
+/*
+ * Jenkinsfile for Deploying HTML Files to Synology NAS
+ *
+ * This pipeline performs the following steps:
+ * 1. Clones the GitHub repository containing the HTML files.
+ * 2. Copies the contents of the portfolio_nas folder to the Synology NAS
+ *    at the target directory: /volume1/web/portfolio/.
+ */
+
+pipeline {
+    agent any // Use any available agent for running the pipeline
+    stages {
+        stage('Clone Repository') {
+            steps {
+                // Checkout the GitHub repository to the Jenkins workspace
+                checkout([$class: 'GitSCM', 
+                          branches: [[name: '*/master']], // Specify the branch to checkout
+                          userRemoteConfigs: [[url: 'https://github.com/angsgit/devops_home_lab.git']]]) // GitHub repository URL
+            }
+        }
+        stage('Deploy to Synology NAS') {
+            steps {
+                script {
+                    // Copy the contents of the portfolio_nas folder to the Synology NAS
+                    // The destination folder is /volume1/web/portfolio/ on the NAS
+                    sh """
+                    scp -r ${WORKSPACE}/jenkins/portfolio_nas/* jenkins-deployer@192.168.1.4:/volume1/web/portfolio/
+                    """
+                }
+            }
+        }
+    }
+}
