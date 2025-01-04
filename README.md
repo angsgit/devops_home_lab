@@ -87,7 +87,7 @@ The home lab is designed for DevOps practice and includes:
 - [x] Integrate Jenkins with Synology NAS to deploy webpages
 
 ## Future Steps
-✔️ Configure additional virtual machines for staging and production environments.
-✔️ Set up infrastructure as code with Terraform and Ansible.
-✔️ Automate application deployments using Jenkins pipelines.
-✔️ Deploy more containers and orchestrate them using Kubernetes
+✔️ Configure additional virtual machines for staging and production environments.  
+✔️ Set up infrastructure as code with Terraform and Ansible.  
+✔️ Automate application deployments using Jenkins pipelines.  
+✔️ Deploy more containers and orchestrate them using Kubernetes  
