@@ -2,7 +2,7 @@
  * Jenkinsfile for Deploying HTML Files to Synology NAS
  *
  * This pipeline clones the portfolio_nas folder from git to jenkins
- * and deploys its contents to Synology NAS.
+ * and deploys its contents to Synology NAS
  */
 
 pipeline {
