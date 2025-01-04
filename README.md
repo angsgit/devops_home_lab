@@ -26,16 +26,16 @@ GitHub: Version control and Jenkins integration.
 
 Next Goals:
 
-✔️ Deploy Kubernetes for container orchestration.
+✔️ Deploy Kubernetes for container orchestration.  
 
 Progress:
 
-✅ vCenter Server and ESXi Host deployed.
-✅ Control machine (Ubuntu) operational.
-✅ Jenkins linked to GitHub.
-✅ Docker setup for containers running jenkins/ansible.
-✅ Pipelines and deployments in progress.
-❌ Deploy kubernetes for container orchestration.
+✅ vCenter Server and ESXi Host deployed.  
+✅ Control machine (Ubuntu) operational.  
+✅ Jenkins linked to GitHub.  
+✅ Docker setup for containers running jenkins/ansible.  
+✅ Pipelines and deployments in progress.  
+❌ Deploy Kubernetes for container orchestration.  
 
 *********************************************************************************************************
 
