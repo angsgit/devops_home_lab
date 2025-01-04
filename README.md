@@ -59,11 +59,15 @@ The home lab is designed for DevOps practice and includes:
 - **ESXi Host**: Hosts virtual machines for various purposes.
 - **Ubuntu Control Machine**: Serves as the main automation node.
 - **Jenkins**: Manages pipelines and automation tasks in the CI/CD lifecycle.
+- **Ansible**: Manages new infrastructure deployments ie:VM's
+- **Docker**: All tools like jenkins ansible etc running in containers on control machine.
 - **GitHub Repositories**: Stores code and integrates with Jenkins for builds.
+- **Synology NAS**: For webhosting etc
 
-## Secrets
-- All secrets stored in github secrets / jenkins credential managers / ansible vaults and so on...for security
+## Security
+- All secrets stored in github secrets / jenkins credential managers / ansible vaults and so on.
 - No hardcoded secrets anywhere, i hope! :)
+- All webpages protected by Lets Encrypt SSL certificates.
 
 ## Goals
 - Deploy a full DevOps lifecycle in the home lab.
@@ -79,6 +83,7 @@ The home lab is designed for DevOps practice and includes:
 - [x] Deploy Jenkins in containers.
 - [x] Deploy Ansible in containers.
 - [x] Deploy infra with Ansible.
+- [x] Integrate Jenkins with Synology NAS to deploy webpages
 
 ## Future Steps
 1. Configure additional virtual machines for staging and production environments.
