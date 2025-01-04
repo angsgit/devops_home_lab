@@ -19,10 +19,10 @@ Objective: Build a DevOps-focused environment for learning and practice.
 
 ## Key Components:
 
-vCenter Server & ESXi Host: Manage virtual machines.  
-Control Machine (Ubuntu): Centralized automation node.  
-Jenkins in Docker: CI/CD pipelines.  
-GitHub: Version control and Jenkins integration.  
+vCenter Server & ESXi Host →  Manage virtual machines.  
+Control Machine (Ubuntu) →  Centralized automation node.  
+Jenkins in Docker →  CI/CD pipelines.  
+GitHub →  Version control and Jenkins integration.  
 
 Next Goals:
 
