@@ -23,18 +23,19 @@ vCenter Server & ESXi Host: Manage virtual machines.
 Control Machine (Ubuntu): Centralized automation node.
 Jenkins in Docker: CI/CD pipelines.
 GitHub: Version control and Jenkins integration.
+
+Next Goals:
+
+✔️ Deploy Kubernetes for container orchestration.
+
 Progress:
 
 ✅ vCenter Server and ESXi Host deployed.
 ✅ Control machine (Ubuntu) operational.
 ✅ Jenkins linked to GitHub.
-⬜ Pipelines and deployments in progress.
-
-Next Goals:
-
-Add staging and production VMs.
-Configure Terraform/Ansible for automation.
-Complete Jenkins pipelines for deployment.
+✅ Docker setup for containers running jenkins/ansible.
+✅ Pipelines and deployments in progress.
+❌ Deploy kubernetes for container orchestration.
 
 *********************************************************************************************************
 
@@ -67,7 +68,7 @@ The home lab is designed for DevOps practice and includes:
 ## Security
 - All secrets stored in github secrets / jenkins credential managers / ansible vaults and so on.
 - No hardcoded secrets anywhere, i hope! :)
-- All webpages protected by Lets Encrypt SSL certificates.
+- All webpages protected by Lets Encrypt SSL Certificates.
 
 ## Goals
 - Deploy a full DevOps lifecycle in the home lab.
