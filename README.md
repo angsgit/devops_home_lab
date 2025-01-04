@@ -19,10 +19,10 @@ Objective: Build a DevOps-focused environment for learning and practice.
 
 ## Key Components:
 
-vCenter Server & ESXi Host: Manage virtual machines.
-Control Machine (Ubuntu): Centralized automation node.
-Jenkins in Docker: CI/CD pipelines.
-GitHub: Version control and Jenkins integration.
+vCenter Server & ESXi Host: Manage virtual machines.  
+Control Machine (Ubuntu): Centralized automation node.  
+Jenkins in Docker: CI/CD pipelines.  
+GitHub: Version control and Jenkins integration.  
 
 Next Goals:
 
@@ -77,14 +77,14 @@ The home lab is designed for DevOps practice and includes:
 - Learn/ practice containers(docker) and orchestration (kubernetes)
 
 ## Current Progress
-- [x] Set up vCenter Server and ESXi Host.
-- [x] Created control VM with Ubuntu Server.
-- [x] Installed Jenkins and linked to GitHub.
-- [x] Deploy pipelines for automated builds and deployments.
-- [x] Deploy Jenkins in containers.
-- [x] Deploy Ansible in containers.
-- [x] Deploy infra with Ansible.
-- [x] Integrate Jenkins with Synology NAS to deploy webpages
+- ✅ Set up vCenter Server and ESXi Host.  
+- ✅ Created control VM with Ubuntu Server.  
+- ✅ Installed Jenkins and linked to GitHub.  
+- ✅ Deploy pipelines for automated builds and deployments.  
+- ✅ Deploy Jenkins in containers.  
+- ✅ Deploy Ansible in containers.  
+- ✅ Deploy infra with Ansible.  
+- ✅ Integrate Jenkins with Synology NAS to deploy webpages.    
 
 ## Future Steps
 ✔️ Configure additional virtual machines for staging and production environments.  
