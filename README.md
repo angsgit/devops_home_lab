@@ -13,7 +13,7 @@ Objective: Build a DevOps-focused environment for learning and practice.
           - Container IaC → **Ansible**
             - Triggered by webhooks from → **GitHub**
               - Triggers pipelines to → **AWS S3**/**Dev**/**Prod**
-                - Jenkins deploys to AWS S3 for application storage or configuration updates
+                - Jenkins deploys to AWS/Local NAS for application storage or configuration updates
 
 
 
