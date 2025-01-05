@@ -2,7 +2,7 @@
 #  TL;DR: 
 
 # DevOps Home Lab 
-Objective: Build a DevOps-focused environment for learning and practice.
+Objective: Build a DevOps/DevSecOps-focused environment for learning and practice.
 
 ## Flow Summary
 - **vCenter Server**
@@ -43,7 +43,7 @@ Progress:
 
 # Home Lab Setup
 
-This repository documents the components and configuration of my home lab environment.
+This repository documents the components and configuration of my home lab environment for DevOps/DevSecOps.
 
 ## Overview
 
