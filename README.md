@@ -67,6 +67,7 @@ The home lab is designed for DevOps practice and includes:
 
 ## Security
 - All secrets stored in github secrets / jenkins credential managers / ansible vaults and so on.
+- Also using a VaultWarden running ina  container on my NAS locally.
 - No hardcoded secrets anywhere, i hope! :)
 - All webpages protected by Lets Encrypt SSL Certificates.
 
