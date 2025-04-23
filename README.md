@@ -29,17 +29,34 @@ Verified Ansible connectivity from the control node to the VMs:
 
 ![Ansible Ping Screenshot](ansible-connect.png)
 
-## 🔧 Jenkins Pipeline Execution
 
-(jenkins.png)
+## 🧪 Jenkins Pipeline Execution
+### Automated pipeline runs on code push:
 
-## 🔧 Grafana Dashboard
+Pulls code from Gitea
+Runs tests (e.g. pytest)
+Performs static code analysis using SonarQube
+Triggers deployment via Ansible
+
+![Jenkins Pipeline Execution](jenkins.png)
+
+## 📊 Grafana Dashboard
+### Visualized metrics for:
+
+Flask app performance
+Jenkins resource usage
+System health
 
 ![Grafana Dashboard](grafana.png)
 
-## 🔧 Prometheus Status
+## 📈 Prometheus Monitoring
+### All service metrics are scraped via Prometheus with jobs set for:
 
-(prom.png)
+Flask app
+Jenkins
+Prometheus itself
+
+![Prometheus Status](prom.png)
 
 
 ## 🌐 Networking
