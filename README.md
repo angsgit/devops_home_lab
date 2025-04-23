@@ -3,7 +3,8 @@
   
 A personal DevOps lab built on VMware Workstation using 8 VMs, each with a dedicated role in the DevOps lifecycle. Everything is automated using Ansible from a central control node.
 
-💻 VMs & Services
+# 💻 VMs & Services
+
 devops-control: Ansible controller
 
 devops-git: Gitea + MySQL (Git server)
@@ -20,13 +21,16 @@ devops-k8s: (planned) Kubernetes cluster
 
 devops-nginx: (planned) Reverse proxy/load balancer
 
-🌐 Networking
+# 🌐 Networking
+
 All VMs use a private NAT network with static IPs (redacted in public docs).
 
-⚙️ Automation
+# ⚙️ Automation
+
 Ansible handles configuration and deployment from the control node.
 
-🚧 Next Steps
+# 🚧 Next Steps
+
 Add Nexus/Harbor, Kubernetes, CI pipelines, and Nginx routing.
 
 *********************************************************************************************************
