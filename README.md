@@ -15,17 +15,31 @@ devops-sonar: SonarQube + PostgreSQL (code quality)
 
 devops-monitor: Prometheus + Grafana (monitoring)
 
-devops-docker: (planned) Container registry (e.g., Nexus)
+devops-docker: Container registry
 
 devops-k8s: (planned) Kubernetes cluster
 
 devops-nginx: (planned) Reverse proxy/load balancer
+
+## 📸 Working Screenshots
 
 ## 🔧 Ansible Connectivity Check
 
 Verified Ansible connectivity from the control node to the VMs:
 
 ![Ansible Ping Screenshot](ansible-connect.png)
+
+## 🔧 Jenkins Pipeline Execution
+
+(jenkins.png)
+
+## 🔧 Grafana Dashboard
+
+(grafana.png)
+
+## 🔧 Prometheus Status
+
+(prom.png)
 
 
 ## 🌐 Networking
