@@ -21,14 +21,8 @@ devops-k8s: (planned) Kubernetes cluster
 
 devops-nginx: (planned) Reverse proxy/load balancer
 
-## 📸 Working Screenshots
 
-## 🔧 Ansible Connectivity Check
-
-Verified Ansible connectivity from the control node to the VMs:
-
-![Ansible Ping Screenshot](ansible-connect.png)
-
+## 📸 Screenshots
 
 ## 🧪 Jenkins Pipeline Execution
 ### Automated pipeline runs on code push:
@@ -49,6 +43,12 @@ System health
 
 ![Grafana Dashboard](grafana.png)
 
+## 🧪 SonarQube Dashboard
+
+SonarQube is integrated into the Jenkins pipeline to perform static code analysis after tests are run. It helps track code quality, bugs, and vulnerabilities.
+
+![SonarQube Dashboard](sonar.png)
+
 ## 📈 Prometheus Monitoring
 ### All service metrics are scraped via Prometheus with jobs set for:
 
@@ -57,6 +57,11 @@ Jenkins
 Prometheus itself
 
 ![Prometheus Status](prom.png)
+
+## 🔧 🔁 Ansible Connectivity
+### Verified connectivity from the Ansible control node to all DevOps VMs using the ping module:
+
+![Ansible Ping Screenshot](ansible-connect.png)
 
 
 ## 🌐 Networking
