@@ -32,8 +32,10 @@ Runs tests (e.g. pytest)
 Performs static code analysis using SonarQube
 Triggers deployment via Ansible
 
+
 ![Jenkins Pipeline Execution](jenkins.png)
 
+---
 ## 📊 Grafana Dashboard
 ### Visualized metrics for:
 
@@ -43,12 +45,14 @@ System health
 
 ![Grafana Dashboard](grafana.png)
 
+---
 ## 🧪 SonarQube Dashboard
 
 SonarQube is integrated into the Jenkins pipeline to perform static code analysis after tests are run. It helps track code quality, bugs, and vulnerabilities.
 
 ![SonarQube Dashboard](sonar.png)
 
+---
 ## 📈 Prometheus Monitoring
 ### All service metrics are scraped via Prometheus with jobs set for:
 
@@ -58,20 +62,23 @@ Prometheus itself
 
 ![Prometheus Status](prom.png)
 
+---
 ## 🔧 🔁 Ansible Connectivity
 ### Verified connectivity from the Ansible control node to all DevOps VMs using the ping module:
 
 ![Ansible Ping Screenshot](ansible-connect.png)
 
-
+---
 ## 🌐 Networking
 
 All VMs use a private NAT network with static IPs (redacted in public docs).
 
+---
 ## ⚙️ Automation
 
 Ansible handles configuration and deployment from the control node.
 
+---
 ## 🚧 Next Steps
 
 Add Nexus/Harbor, Kubernetes, CI pipelines, and Nginx routing.
