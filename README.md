@@ -21,7 +21,7 @@ devops-k8s: (planned) Kubernetes cluster
 
 devops-nginx: (planned) Reverse proxy/load balancer
 
-
+---
 ## 📸 Screenshots
 
 ## 🧪 Jenkins Pipeline Execution
@@ -31,7 +31,6 @@ Pulls code from Gitea
 Runs tests (e.g. pytest)
 Performs static code analysis using SonarQube
 Triggers deployment via Ansible
-
 
 ![Jenkins Pipeline Execution](jenkins.png)
 
