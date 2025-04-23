@@ -35,7 +35,7 @@ Verified Ansible connectivity from the control node to the VMs:
 
 ## 🔧 Grafana Dashboard
 
-(grafana.png)
+![Grafana Dashboard](grafana.png)
 
 ## 🔧 Prometheus Status
 
