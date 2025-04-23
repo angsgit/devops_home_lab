@@ -25,7 +25,7 @@ devops-nginx: (planned) Reverse proxy/load balancer
 
 Verified Ansible connectivity from the control node to the VMs:
 
-![Ansible Ping Screenshot](ansible-ping-result.png)
+![Ansible Ping Screenshot](ansible-connect.png)
 
 
 # 🌐 Networking
