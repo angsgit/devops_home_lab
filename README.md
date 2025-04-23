@@ -35,7 +35,7 @@ Add Nexus/Harbor, Kubernetes, CI pipelines, and Nginx routing.
 
 *********************************************************************************************************
 
-# 🧪 DevOps Homelab Setup
+# 🧪 Full DevOps Homelab Setup
 
 This document outlines the architecture, services, and current state of a personal DevOps homelab designed for hands-on learning, experimentation, and automation using Ansible and VMware Workstation.
 
