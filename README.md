@@ -1,94 +1,129 @@
 *********************************************************************************************************
-#  TL;DR: 
+# 🧪 DevOps Homelab TL;DR
+  
+A personal DevOps lab built on VMware Workstation using 8 VMs, each with a dedicated role in the DevOps lifecycle. Everything is automated using Ansible from a central control node.
 
-# DevOps Home Lab 
-Objective: Build a DevOps/DevSecOps-focused environment for learning and practice.
+💻 VMs & Services
+devops-control: Ansible controller
 
-## Flow Summary
-- **vCenter Server**
-  - Manages → **ESXi Host**
-    - Runs → **Control VM**
-      - VM Hosts → **Docker**
-        - Container CICD → **Jenkins**
-          - Container IaC → **Ansible**
-            - Triggered by webhooks from → **GitHub**
-              - Triggers pipelines to → **AWS S3**/**Dev**/**Prod**
-                - Jenkins deploys to AWS/Local NAS for application storage or configuration updates
+devops-git: Gitea + MySQL (Git server)
 
+devops-jenkins: Jenkins (CI/CD)
 
+devops-sonar: SonarQube + PostgreSQL (code quality)
 
-## Key Components:
+devops-monitor: Prometheus + Grafana (monitoring)
 
-1. vCenter Server & ESXi Host →  Manage virtual machines.  
-2. Control Machine (Ubuntu) →  Centralized automation node.  
-3. Jenkins in Docker →  CI/CD pipelines.  
-4. GitHub →  Version control and Jenkins integration.  
+devops-docker: (planned) Container registry (e.g., Nexus)
 
-Next Goals:
+devops-k8s: (planned) Kubernetes cluster
 
-✔️ Deploy Kubernetes for container orchestration.  
+devops-nginx: (planned) Reverse proxy/load balancer
 
-Progress:
+🌐 Networking
+All VMs use a private NAT network with static IPs (redacted in public docs).
 
-✅ vCenter Server and ESXi Host deployed.  
-✅ Control machine (Ubuntu) operational.  
-✅ Jenkins linked to GitHub.  
-✅ Docker setup for containers running jenkins/ansible.  
-✅ Pipelines and deployments in progress.  
-❌ Deploy Kubernetes for container orchestration.  
+⚙️ Automation
+Ansible handles configuration and deployment from the control node.
+
+🚧 Next Steps
+Add Nexus/Harbor, Kubernetes, CI pipelines, and Nginx routing.
 
 *********************************************************************************************************
 
-# LONG;
+# 🧪 DevOps Homelab Setup
 
-# Home Lab Setup
+This document outlines the architecture, services, and current state of a personal DevOps homelab designed for hands-on learning, experimentation, and automation using Ansible and VMware Workstation.
 
-This repository documents the components and configuration of my home lab environment for DevOps/DevSecOps.
+---
 
-## Overview
+## 📌 Overview
 
-The home lab is designed for DevOps practice and includes:
-- **vCenter Server**: For virtual machine management.
-- **ESXi Host**: Running multiple virtual machines.
-- **Control Machine**: Ubuntu Server for automation tasks.
-- **Jenkins**: Running in a Docker container for CI/CD pipelines.
-- **GitHub**: For version control and pipeline integration.
+The homelab simulates a real-world DevOps environment with dedicated virtual machines for source control, CI/CD, static code analysis, monitoring, container registry, and more. All VMs run on a local VMware Workstation host, using an isolated virtual network.
 
-## Components
+---
 
-- **vCenter Server**: Manages virtualized environments.
-- **ESXi Host**: Hosts virtual machines for various purposes.
-- **Ubuntu Control Machine**: Serves as the main automation node.
-- **Jenkins**: Manages pipelines and automation tasks in the CI/CD lifecycle.
-- **Ansible**: Manages new infrastructure deployments ie:VM's
-- **Docker**: All tools like jenkins ansible etc running in containers on control machine.
-- **GitHub Repositories**: Stores code and integrates with Jenkins for builds.
-- **Synology NAS**: For webhosting etc
+## 🧱 Virtual Machine Inventory
 
-## Security
-- All secrets stored in github secrets / jenkins credential managers / ansible vaults and so on.
-- Also using VaultWarden running in a container on my NAS locally.
-- No hardcoded secrets anywhere, i hope! :)
-- All webpages protected by Lets Encrypt SSL Certificates.
+| VM Name          | IP Address     |    Role / Services                               | Status           |
+|------------------|----------------|--------------------------------------------------|-------------------|
+| `devops-control` | `Redacted`     | Ansible controller                               | ✅ Configured    |
+| `devops-git`     | `Redacted`     | Gitea + MySQL (source control)                   | ✅ Configured    |
+| `devops-jenkins` | `Redacted`     | Jenkins (CI/CD pipeline)                         | ✅ Accessible    |
+| `devops-sonar`   | `Redacted`     | SonarQube + PostgreSQL (code quality)            | ✅ Configured    |
+| `devops-docker`  | `Redacted`     | Planned: Container registry (e.g., Nexus/Harbor) | 🔄 Setup pending |
+| `devops-k8s`     | `Redacted`     | Planned: Kubernetes cluster                      | 🔄 Not started   |
+| `devops-monitor` | `Redacted`     | Prometheus + Grafana (monitoring)                | ✅ Working       |
+| `devops-nginx`   | `Redacted`     | Planned: Reverse proxy / load balancer (Nginx)   | ⏳ Not created   |
 
-## Goals
-- Deploy a full DevOps lifecycle in the home lab.
-- Practice automation and CI/CD workflows.
-- Learn and experiment with infrastructure as code tools.
-- Learn/ practice containers(docker) and orchestration (kubernetes)
+---
 
-## Current Progress
-- ✅ Set up vCenter Server and ESXi Host.  
-- ✅ Created control VM with Ubuntu Server.  
-- ✅ Installed Jenkins and linked to GitHub.  
-- ✅ Deploy pipelines for automated builds and deployments.  
-- ✅ Deploy Jenkins in containers.  
-- ✅ Deploy Ansible in containers.  
-- ✅ Deploy infra with Ansible.  
-- ✅ Integrate Jenkins with Synology NAS to deploy webpages.    
+## ⚙️ Services Setup Summary
 
-## Future Steps
-✔️ Configure additional virtual machines for staging and production environments.  
-✔️ Set up infrastructure as code with Terraform and Ansible.  
-✔️ Automate application deployments using Jenkins pipelines.  
-✔️ Deploy more containers and orchestrate them using Kubernetes  
+### Ansible Control Node (`devops-control`)
+- Installed Ansible.
+- SSH keys configured for passwordless access to all other VMs.
+- Verified using `ansible all -m ping`.
+
+### Gitea Git Server (`devops-git`)
+- Installed Gitea using Ansible.
+- MySQL backend configured for Gitea.
+- Web UI is accessible.
+
+### Jenkins (`devops-jenkins`)
+- Installed Jenkins via Ansible.
+- Accessible via web login interface.
+
+### SonarQube (`devops-sonar`)
+- Installed SonarQube.
+- Local PostgreSQL configured and integrated.
+- Web UI is accessible.
+
+### Monitoring (`devops-monitor`)
+- Prometheus installed and scraping targets.
+- Grafana installed and accessible.
+- Ready for dashboard creation.
+
+---
+
+## 🧑‍💻 Networking
+
+- All VMs run on an isolated NAT network in VMware Workstation.
+- Static IPs are manually assigned and referenced internally via placeholder variables.
+- DNS handled locally or via `/etc/hosts` entries.
+
+---
+
+## 🔁 Automation with Ansible
+
+- **Control VM** uses Ansible to:
+  - Install and configure Gitea and MySQL.
+  - Deploy Jenkins and plugins (planned for future expansion).
+- Inventory defined in `/etc/ansible/hosts`.
+
+---
+
+## 🧭 Next Steps
+
+- [ ] Set up a container registry on `devops-docker` (e.g., Nexus or Harbor).
+- [ ] Deploy a basic Kubernetes cluster on `devops-k8s`.
+- [ ] Set up `devops-nginx` as a reverse proxy to expose internal services.
+- [ ] Add CI/CD pipelines in Jenkins.
+- [ ] Add Prometheus targets and Grafana dashboards for all services.
+- [ ] Improve Ansible roles for modular and reusable configurations.
+
+---
+
+## 🛠️ Troubleshooting Tips
+
+- Use `ansible -m ping all` to verify VM connectivity.
+- Jenkins initial password: check `/var/lib/jenkins/secrets/initialAdminPassword`.
+- Gitea logs: `/var/lib/gitea/log/`, MySQL logs: `/var/log/mysql/`.
+- SonarQube logs: `/opt/sonarqube/logs/`.
+
+---
+
+## ✍️ Author Notes
+
+- This homelab is part of a learning journey into DevOps and DevSecOps practices.
+- Regular updates and improvements are documented in GitHub.
