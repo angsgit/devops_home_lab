@@ -21,6 +21,13 @@ devops-k8s: (planned) Kubernetes cluster
 
 devops-nginx: (planned) Reverse proxy/load balancer
 
+# 🔧 Ansible Connectivity Check
+
+Verified Ansible connectivity from the control node to the VMs:
+
+![Ansible Ping Screenshot](ansible-ping-result.png)
+
+
 # 🌐 Networking
 
 All VMs use a private NAT network with static IPs (redacted in public docs).
@@ -100,9 +107,12 @@ The homelab simulates a real-world DevOps environment with dedicated virtual mac
 
 ## 🔁 Automation with Ansible
 
-- **Control VM** uses Ansible to:
+- **Control VM** uses Ansible over SSH to remotely deploy on seperate VM's:
   - Install and configure Gitea and MySQL.
-  - Deploy Jenkins and plugins (planned for future expansion).
+  - Deploy Jenkins and plugins.
+  - Deploy Docker.
+  - Deploy & configure Sonarcube.
+  - Deploy & configure Prometheus/Grafana.
 - Inventory defined in `/etc/ansible/hosts`.
 
 ---
