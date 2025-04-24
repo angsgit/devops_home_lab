@@ -1,18 +1,20 @@
 *********************************************************************************************************
 # 🧪 DevOps Homelab TL;DR
   
-A personal DevOps lab built on VMware using Multiple VMs, each with a dedicated role in the DevOps lifecycle. Everything is automated using Ansible from a central control node. All VM's hosted locally on an Vmware ESXi Host.
+A personal DevOps lab built on VMware using Multiple VMs, each with a dedicated role in the DevOps lifecycle. Everything is automated using Ansible from a central control node. All VM's running Linux, hosted locally on ESXi.
 
-## 💻 VMs & Services
+## 💻 VMs & Services (LINUX)
 
-devops-control: Ansible controller
-devops-git: Gitea + MySQL (Git server)
-devops-jenkins: Jenkins (CI/CD)
-devops-sonar: SonarQube + PostgreSQL (code quality)
-devops-monitor: Prometheus + Grafana (monitoring)
-devops-docker: Container registry
-devops-k8s: (planned) Kubernetes cluster
-devops-nginx: (planned) Reverse proxy/load balancer
+| VM Name          | IP Address     |    Role / Services                               | Status           |
+|------------------|----------------|--------------------------------------------------|------------------|
+| `devops-control` | `Redacted`     | Ansible controller                               | ✅ Configured    |
+| `devops-git`     | `Redacted`     | Gitea + MySQL (source control)                   | ✅ Configured    |
+| `devops-jenkins` | `Redacted`     | Jenkins (CI/CD pipeline)                         | ✅ Configured    |
+| `devops-sonar`   | `Redacted`     | SonarQube + PostgreSQL (code quality)            | ✅ Configured    |
+| `devops-docker`  | `Redacted`     | Planned: Container registry (e.g., Nexus/Harbor) | ✅ Configured    |
+| `devops-k8s`     | `Redacted`     | Planned: Kubernetes cluster                      | ⏳ Pending       |
+| `devops-monitor` | `Redacted`     | Prometheus + Grafana (monitoring)                | ✅ Configured    |
+| `devops-nginx`   | `Redacted`     | Planned: Reverse proxy / load balancer (Nginx)   | ⏳ Pending       |
 
 ---
 ## 📸 Screenshots
@@ -88,22 +90,7 @@ This document outlines the architecture, services, and current state of a person
 The homelab simulates a real-world DevOps environment with dedicated virtual machines for source control, CI/CD, static code analysis, monitoring, container registry, and more. All VMs run on a local VMware host, using an isolated virtual network.
 
 ---
-
-## 🧱 Virtual Machine Inventory
-
-| VM Name          | IP Address     |    Role / Services                               | Status           |
-|------------------|----------------|--------------------------------------------------|------------------|
-| `devops-control` | `Redacted`     | Ansible controller                               | ✅ Configured    |
-| `devops-git`     | `Redacted`     | Gitea + MySQL (source control)                   | ✅ Configured    |
-| `devops-jenkins` | `Redacted`     | Jenkins (CI/CD pipeline)                         | ✅ Configured    |
-| `devops-sonar`   | `Redacted`     | SonarQube + PostgreSQL (code quality)            | ✅ Configured    |
-| `devops-docker`  | `Redacted`     | Planned: Container registry (e.g., Nexus/Harbor) | ✅ Configured    |
-| `devops-k8s`     | `Redacted`     | Planned: Kubernetes cluster                      | ⏳ Pending       |
-| `devops-monitor` | `Redacted`     | Prometheus + Grafana (monitoring)                | ✅ Configured    |
-| `devops-nginx`   | `Redacted`     | Planned: Reverse proxy / load balancer (Nginx)   | ⏳ Pending       |
-
----
-
+s
 ## ⚙️ Services Setup Summary
 
 ### Ansible Control Node (`devops-control`)
