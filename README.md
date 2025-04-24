@@ -1,7 +1,7 @@
 *********************************************************************************************************
 # 🧪 DevOps Homelab TL;DR
   
-A personal DevOps lab built on VMware Workstation using 8 VMs, each with a dedicated role in the DevOps lifecycle. Everything is automated using Ansible from a central control node.
+A personal DevOps lab built on VMware using Multiple VMs, each with a dedicated role in the DevOps lifecycle. Everything is automated using Ansible from a central control node.
 
 ## 💻 VMs & Services
 
@@ -86,13 +86,13 @@ Add Nexus/Harbor, Kubernetes, CI pipelines, and Nginx routing.
 
 # 🧪 Full DevOps Homelab Setup
 
-This document outlines the architecture, services, and current state of a personal DevOps homelab designed for hands-on learning, experimentation, and automation using Ansible and VMware Workstation.
+This document outlines the architecture, services, and current state of a personal DevOps homelab designed for hands-on learning, experimentation, and automation using.
 
 ---
 
 ## 📌 Overview
 
-The homelab simulates a real-world DevOps environment with dedicated virtual machines for source control, CI/CD, static code analysis, monitoring, container registry, and more. All VMs run on a local VMware Workstation host, using an isolated virtual network.
+The homelab simulates a real-world DevOps environment with dedicated virtual machines for source control, CI/CD, static code analysis, monitoring, container registry, and more. All VMs run on a local VMware host, using an isolated virtual network.
 
 ---
 
