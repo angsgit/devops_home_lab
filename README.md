@@ -105,7 +105,7 @@ The homelab simulates a real-world DevOps environment with dedicated virtual mac
 | `devops-jenkins` | `Redacted`     | Jenkins (CI/CD pipeline)                         | ✅ Configured    |
 | `devops-sonar`   | `Redacted`     | SonarQube + PostgreSQL (code quality)            | ✅ Configured    |
 | `devops-docker`  | `Redacted`     | Planned: Container registry (e.g., Nexus/Harbor) | ✅ Configured    |
-| `devops-k8s`     | `Redacted`     | Planned: Kubernetes cluster                      | 🔄 Pending       |
+| `devops-k8s`     | `Redacted`     | Planned: Kubernetes cluster                      | ⏳ Pending       |
 | `devops-monitor` | `Redacted`     | Prometheus + Grafana (monitoring)                | ✅ Configured    |
 | `devops-nginx`   | `Redacted`     | Planned: Reverse proxy / load balancer (Nginx)   | ⏳ Pending       |
 
