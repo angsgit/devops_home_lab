@@ -90,7 +90,7 @@ This document outlines the architecture, services, and current state of a person
 The homelab simulates a real-world DevOps environment with dedicated virtual machines for source control, CI/CD, static code analysis, monitoring, container registry, and more. All VMs run on a local VMware host, using an isolated virtual network.
 
 ---
-s
+
 ## ⚙️ Services Setup Summary
 
 ### Ansible Control Node (`devops-control`)
