@@ -1,24 +1,17 @@
 *********************************************************************************************************
 # 🧪 DevOps Homelab TL;DR
   
-A personal DevOps lab built on VMware using Multiple VMs, each with a dedicated role in the DevOps lifecycle. Everything is automated using Ansible from a central control node.
+A personal DevOps lab built on VMware using Multiple VMs, each with a dedicated role in the DevOps lifecycle. Everything is automated using Ansible from a central control node. All VM's hosted locally on an Vmware ESXi Host.
 
 ## 💻 VMs & Services
 
 devops-control: Ansible controller
-
 devops-git: Gitea + MySQL (Git server)
-
 devops-jenkins: Jenkins (CI/CD)
-
 devops-sonar: SonarQube + PostgreSQL (code quality)
-
 devops-monitor: Prometheus + Grafana (monitoring)
-
 devops-docker: Container registry
-
 devops-k8s: (planned) Kubernetes cluster
-
 devops-nginx: (planned) Reverse proxy/load balancer
 
 ---
