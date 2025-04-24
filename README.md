@@ -42,7 +42,7 @@ Flask app performance
 Jenkins resource usage
 System health
 
-![Grafana Dashboard](grafana.png)
+![Grafana Dashboard](grafanas.png)
 
 ---
 ## 🧪 SonarQube Dashboard
@@ -59,7 +59,7 @@ Flask app
 Jenkins
 Prometheus itself
 
-![Prometheus Status](prom.png)
+![Prometheus Status](promt.png)
 
 ---
 ## 🔧 🔁 Ansible Connectivity
