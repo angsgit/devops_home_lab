@@ -99,15 +99,15 @@ The homelab simulates a real-world DevOps environment with dedicated virtual mac
 ## 🧱 Virtual Machine Inventory
 
 | VM Name          | IP Address     |    Role / Services                               | Status           |
-|------------------|----------------|--------------------------------------------------|-------------------|
+|------------------|----------------|--------------------------------------------------|------------------|
 | `devops-control` | `Redacted`     | Ansible controller                               | ✅ Configured    |
 | `devops-git`     | `Redacted`     | Gitea + MySQL (source control)                   | ✅ Configured    |
-| `devops-jenkins` | `Redacted`     | Jenkins (CI/CD pipeline)                         | ✅ Accessible    |
+| `devops-jenkins` | `Redacted`     | Jenkins (CI/CD pipeline)                         | ✅ Configured    |
 | `devops-sonar`   | `Redacted`     | SonarQube + PostgreSQL (code quality)            | ✅ Configured    |
-| `devops-docker`  | `Redacted`     | Planned: Container registry (e.g., Nexus/Harbor) | 🔄 Setup pending |
-| `devops-k8s`     | `Redacted`     | Planned: Kubernetes cluster                      | 🔄 Not started   |
-| `devops-monitor` | `Redacted`     | Prometheus + Grafana (monitoring)                | ✅ Working       |
-| `devops-nginx`   | `Redacted`     | Planned: Reverse proxy / load balancer (Nginx)   | ⏳ Not created   |
+| `devops-docker`  | `Redacted`     | Planned: Container registry (e.g., Nexus/Harbor) | ✅ Configured    |
+| `devops-k8s`     | `Redacted`     | Planned: Kubernetes cluster                      | 🔄 Pending       |
+| `devops-monitor` | `Redacted`     | Prometheus + Grafana (monitoring)                | ✅ Configured    |
+| `devops-nginx`   | `Redacted`     | Planned: Reverse proxy / load balancer (Nginx)   | ⏳ Pending       |
 
 ---
 
