@@ -17,7 +17,7 @@ A personal DevOps lab built on VMware using Multiple VMs, each with a dedicated 
 | `devops-nginx`   | `Redacted`     | Planned: Reverse proxy / load balancer (Nginx)   | ⏳ Pending       |
 
 ---
-## 📸 Screenshots
+## 📸 Working Screenshots
 
 ## 📊 Local GITEA Server
 ### Version Control For:
