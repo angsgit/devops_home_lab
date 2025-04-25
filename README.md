@@ -24,7 +24,7 @@ A personal DevOps lab built on VMware using Multiple VMs, each with a dedicated 
 
 Ansible Playbooks
 
-![Local GITEA Server](gitea.png)
+![Local GITEA Server](git.png)
 
 ---
 ## 🧪 Jenkins Pipeline Execution
