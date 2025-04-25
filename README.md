@@ -20,9 +20,10 @@ A personal DevOps lab built on VMware using Multiple VMs, each with a dedicated 
 ## 📸 Screenshots
 
 ## 📊 Local GITEA Srrver
-### Version Controlling:
+### Version Control For:
 
 Ansible Playbooks
+Other Files
 
 ![Local GITEA Server](git.png)
 
