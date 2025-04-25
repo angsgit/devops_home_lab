@@ -42,16 +42,17 @@ A personal DevOps lab built on VMware using Multiple VMs, each with a dedicated 
 ## 📊 Grafana Dashboard
 ### Visualized metrics for:
 
-Flask app performance
-Jenkins resource usage
-System health
+- Flask app performance
+- Jenkins resource usage
+- System health
 
 ![Grafana Dashboard](grafanas.png)
 
 ---
 ## 🧪 SonarQube Dashboard
 
-SonarQube is integrated into the Jenkins pipeline to perform static code analysis after tests are run. It helps track code quality, bugs, and vulnerabilities.
+- SonarQube is integrated into the Jenkins pipeline to perform static code analysis after tests are run.
+- Helps track code quality, bugs, and vulnerabilities.
 
 ![SonarQube Dashboard](sonar.png)
 
@@ -59,9 +60,9 @@ SonarQube is integrated into the Jenkins pipeline to perform static code analysi
 ## 📈 Prometheus Monitoring
 ### All service metrics are scraped via Prometheus with jobs set for:
 
-Flask app
-Jenkins
-Prometheus itself
+- Flask app
+- Jenkins
+- Prometheus itself
 
 ![Prometheus Status](promt.png)
 
