@@ -22,8 +22,8 @@ A personal DevOps lab built on VMware using Multiple VMs, each with a dedicated 
 ## 📊 Local GITEA Srrver
 ### Version Control For:
 
-Ansible Playbooks
-Other Files
+- Ansible Playbooks
+- Other Files
 
 ![Local GITEA Server](git.png)
 
@@ -31,10 +31,10 @@ Other Files
 ## 🧪 Jenkins Pipeline Execution
 ### Automated pipeline runs on code push:
 
-Pulls code from Gitea
-Runs tests (e.g. pytest)
-Performs static code analysis using SonarQube
-Triggers deployment via Ansible
+- Pulls code from Gitea  
+- Runs tests (e.g. pytest)  
+- Performs static code analysis using SonarQube  
+- Triggers deployment via Ansible  
 
 ![Jenkins Pipeline Execution](jenkins.png)
 
