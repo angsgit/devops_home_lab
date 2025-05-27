@@ -1,3 +1,5 @@
+# THIS SCRIPT MODIFIES A SERVER TO USE A STATIC IP INSTEAD OF DHCP
+
 import paramiko
 
 hostname = input("SSH IP: ")
