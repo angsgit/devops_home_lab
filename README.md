@@ -1,21 +1,31 @@
-# 🚀 DevOps Project — CI/CD Pipeline with Kubernetes, Jenkins, and Monitoring
+# 🚀 DevOps Home Lab — CI/CD, Kubernetes & Monitoring
 
 ## 📘 Overview
-This project demonstrates a complete **DevOps CI/CD pipeline** using a Flask web application deployed on a Kubernetes cluster.  
-It covers **source control, build automation, containerization, orchestration, and monitoring** — all built and managed locally in a fully functional home lab environment.
+This project demonstrates a complete DevOps CI/CD pipeline using a simple Flask-based web application deployed on a Kubernetes cluster.
+It covers source control, build automation, containerization, orchestration, monitoring, and observability - all running locally in a fully functional home lab environment.
+The setup also emphasizes high availability (HA), disaster recovery (DR), and service reliability, reflecting real-world enterprise DevOps and SRE practices.
 
 ---
 
 ## 🧩 Project Architecture
 
-**Technologies Used:**
-- **GitHub** – Source control and webhook trigger  
-- **Jenkins** – CI/CD automation server  
-- **Docker & Docker Hub** – Containerization and image registry  
-- **Kubernetes (multi-node)** – Container orchestration and deployment  
-- **Prometheus & Grafana (via Helm)** – Metrics collection and visualization  
-- **Ansible (optional)** – Infrastructure automation  
-- **Python Flask** – Sample web application
+## 🧰 Tech Stack & Tools Used
+
+| Category | Tool | Purpose |
+|-----------|------|----------|
+| **Source Control** | [GitHub] (https://github.com) | Hosts application and IaC repositories |
+| **CI/CD Automation** | [Jenkins] (https://www.jenkins.io) | Automates build, test, and deploy pipeline |
+| **Containerization** | [Docker] (https://www.docker.com) | Packages the Flask app and dependencies |
+| **Orchestration** | [Kubernetes] (https://kubernetes.io) | Deploys and manages application containers |
+| **Configuration Management** | [Ansible] (https://www.ansible.com) | Automates environment setup across VMs |
+| **Infrastructure as Code (IaC)** | [Terraform] (https://www.terraform.io) |  Automates VM and cluster provisioning |
+| **Code Quality & Scanning** | [SonarQube] (https://www.sonarqube.org) | Static code analysis integrated into CI |
+| **Artifact Registry** | [DockerHub] (https://hub.docker.com) | Stores and versions container images |
+| **Monitoring & Metrics** | [Prometheus] (https://prometheus.io) | Collects metrics from Kubernetes and applications |
+| **Visualization & Dashboards** | [Grafana] (https://grafana.com) | Visualizes performance and reliability metrics |
+| **Reverse Proxy & Load Balancing** | [NGINX] (https://www.nginx.com) | Provides ingress and routing for web traffic |
+| **Programming Language** | [Python] (https://flask.palletsprojects.com) | Simple web app used for demonstration |
+
 
 ---
 
