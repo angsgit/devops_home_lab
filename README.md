@@ -29,6 +29,55 @@ The setup also emphasizes high availability (HA), disaster recovery (DR), and se
 
 ---
 
+## 🏗️ High-Level Architecture & CI/CD Flow
+
+This setup represents a **real-world DevOps pipeline** — from code commit to deployment and monitoring — running entirely inside a **local Kubernetes cluster**.
+
+```text
+           ┌────────────────┐
+           │   Developer    │
+           │   (Git Push)   │
+           └──────┬─────────┘
+                  │
+                  ▼
+        ┌─────────────────────┐
+        │     GitHub Repo     │
+        │ (Source + Jenkinsfile)
+        └────────┬────────────┘
+                 │ Webhook
+                 ▼
+        ┌─────────────────────┐
+        │       Jenkins       │
+        │  CI/CD Orchestrator │
+        ├─────────────────────┤
+        │ Build Docker Image  │
+        │ Run Unit Tests      │
+        │ Push to Docker Hub  │
+        │ Deploy via kubectl  │
+        └────────┬────────────┘
+                 │
+                 ▼
+        ┌─────────────────────┐
+        │     Docker Hub      │
+        │ (Container Images)  │
+        └────────┬────────────┘
+                 │
+                 ▼
+        ┌─────────────────────┐
+        │   Kubernetes (K8s)  │
+        │  (App Deployment)   │
+        └────────┬────────────┘
+                 │
+                 ▼
+        ┌─────────────────────┐
+        │   Prometheus +      │
+        │     Grafana         │
+        │ (Monitoring Stack)  │
+        └─────────────────────┘
+
+
+---
+
 ## 🏗️ Phase 1 — Flask App Setup
 
 - Built a simple Python Flask application with `/` and `/metrics` endpoints.
