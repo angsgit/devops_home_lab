@@ -74,7 +74,7 @@ This setup represents a **real-world DevOps pipeline** — from code commit to d
         │     Grafana         │
         │ (Monitoring Stack)  │
         └─────────────────────┘
-
+---
 
 ---
 
