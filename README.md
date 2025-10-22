@@ -1,175 +1,320 @@
-*********************************************************************************************************
-# 🧪 DevOps Homelab TL;DR
-  
-A personal DevOps lab built on VMware using Multiple VMs, each with a dedicated role in the DevOps lifecycle. Everything is automated using Ansible from a central control node. All VM's running Linux, hosted locally on ESXi.
+# 🚀 DevOps Project — CI/CD Pipeline with Kubernetes, Jenkins, and Monitoring
 
-## 💻 VMs & Services (LINUX)
-
-| VM Name          | IP Address     |    Role / Services                               | Status           |
-|------------------|----------------|--------------------------------------------------|------------------|
-| `devops-control` | `Redacted`     | Ansible controller                               | ✅ Configured    |
-| `devops-git`     | `Redacted`     | Gitea + MySQL (source control)                   | ✅ Configured    |
-| `devops-jenkins` | `Redacted`     | Jenkins (CI/CD pipeline)                         | ✅ Configured    |
-| `devops-sonar`   | `Redacted`     | SonarQube + PostgreSQL (code quality)            | ✅ Configured    |
-| `devops-docker`  | `Redacted`     | Planned: Container registry (e.g., Nexus/Harbor) | ✅ Configured    |
-| `devops-k8s`     | `Redacted`     | Planned: Kubernetes cluster                      | ⏳ Pending       |
-| `devops-monitor` | `Redacted`     | Prometheus + Grafana (monitoring)                | ✅ Configured    |
-| `devops-nginx`   | `Redacted`     | Planned: Reverse proxy / load balancer (Nginx)   | ⏳ Pending       |
-
----
-## 📸 Working Screenshots
-
-## 📊 Local GITEA Server
-### Version Control For:
-
-- Ansible Playbooks
-- Other Files
-
-![Local GITEA Server](git.png)
-
----
-## 🧪 Jenkins Pipeline Execution
-### Automated pipeline runs on code push:
-
-- Pulls code from Gitea  
-- Runs tests (e.g. pytest)  
-- Performs static code analysis using SonarQube  
-- Triggers deployment via Ansible  
-
-![Jenkins Pipeline Execution](jenkins.png)
-
----
-## 📊 Grafana Dashboard
-### Visualized metrics for:
-
-- Flask app performance
-- Jenkins resource usage
-- System health
-
-![Grafana Dashboard](grafanas.png)
-
----
-## 🧪 SonarQube Dashboard
-
-- SonarQube is integrated into the Jenkins pipeline to perform static code analysis after tests are run.
-- Helps track code quality, bugs, and vulnerabilities.
-
-![SonarQube Dashboard](sonar.png)
-
----
-## 📈 Prometheus Monitoring
-### All service metrics are scraped via Prometheus with jobs set for:
-
-- Flask app
-- Jenkins
-- Prometheus itself
-
-![Prometheus Status](promt.png)
-
----
-## 🔧 🔁 Ansible Connectivity
-### Verified connectivity from the Ansible control node to all DevOps VMs using the ping module:
-
-![Ansible Ping Screenshot](ansible-connect.png)
-
----
-## 🌐 Networking
-
-All VMs use a private NAT network with static IPs (redacted in public docs).
-
----
-## ⚙️ Automation
-
-Ansible handles configuration and deployment from the control node.
-
----
-## 🚧 Next Steps
-
-Add Nexus/Harbor, Kubernetes, CI pipelines, and Nginx routing.
-
-*********************************************************************************************************
-
-# 🧪 Full DevOps Homelab Setup
-
-This document outlines the architecture, services, and current state of a personal DevOps homelab designed for hands-on learning, experimentation, and automation using.
+## 📘 Overview
+This project demonstrates a complete **DevOps CI/CD pipeline** using a Flask web application deployed on a Kubernetes cluster.  
+It covers **source control, build automation, containerization, orchestration, and monitoring** — all built and managed locally in a fully functional home lab environment.
 
 ---
 
-## 📌 Overview
+## 🧩 Project Architecture
 
-The homelab simulates a real-world DevOps environment with dedicated virtual machines for source control, CI/CD, static code analysis, monitoring, container registry, and more. All VMs run on a local VMware host, using an isolated virtual network.
-
----
-
-## ⚙️ Services Setup Summary
-
-### Ansible Control Node (`devops-control`)
-- Installed Ansible.
-- SSH keys configured for passwordless access to all other VMs.
-- Verified using `ansible all -m ping`.
-
-### Gitea Git Server (`devops-git`)
-- Installed Gitea using Ansible.
-- MySQL backend configured for Gitea.
-- Web UI is accessible.
-
-### Jenkins (`devops-jenkins`)
-- Installed Jenkins via Ansible.
-- Accessible via web login interface.
-
-### SonarQube (`devops-sonar`)
-- Installed SonarQube.
-- Local PostgreSQL configured and integrated.
-- Web UI is accessible.
-
-### Monitoring (`devops-monitor`)
-- Prometheus installed and scraping targets.
-- Grafana installed and accessible.
-- Ready for dashboard creation.
+**Technologies Used:**
+- **GitHub** – Source control and webhook trigger  
+- **Jenkins** – CI/CD automation server  
+- **Docker & Docker Hub** – Containerization and image registry  
+- **Kubernetes (multi-node)** – Container orchestration and deployment  
+- **Prometheus & Grafana (via Helm)** – Metrics collection and visualization  
+- **Ansible (optional)** – Infrastructure automation  
+- **Python Flask** – Sample web application
 
 ---
 
-## 🧑‍💻 Networking
+## 🏗️ Phase 1 — Flask App Setup
 
-- All VMs run on an isolated NAT network in VMware Workstation.
-- Static IPs are manually assigned and referenced internally via placeholder variables.
-- DNS handled locally or via `/etc/hosts` entries.
-
----
-
-## 🔁 Automation with Ansible
-
-- **Control VM** uses Ansible over SSH to remotely deploy on seperate VM's:
-  - Install and configure Gitea and MySQL.
-  - Deploy Jenkins and plugins.
-  - Deploy Docker.
-  - Deploy & configure Sonarcube.
-  - Deploy & configure Prometheus/Grafana.
-- Inventory defined in `/etc/ansible/hosts`.
+- Built a simple Python Flask application with `/` and `/metrics` endpoints.
+- Added a `requirements.txt` file for dependencies.
+- Verified the app runs locally using:
+  ```bash
+  python main.py
+  ```
+- Confirmed `/metrics` exposes Prometheus-style metrics for monitoring.
 
 ---
 
-## 🧭 Next Steps
+## 🐳 Phase 2 — Dockerization
 
-- [ ] Set up a container registry on `devops-docker` (e.g., Nexus or Harbor).
-- [ ] Deploy a basic Kubernetes cluster on `devops-k8s`.
-- [ ] Set up `devops-nginx` as a reverse proxy to expose internal services.
-- [ ] Add CI/CD pipelines in Jenkins.
-- [ ] Add Prometheus targets and Grafana dashboards for all services.
-- [ ] Improve Ansible roles for modular and reusable configurations.
+- Created a `Dockerfile`:
+  ```dockerfile
+  FROM python:3.10-slim
+  WORKDIR /app
+  COPY requirements.txt .
+  RUN pip install --no-cache-dir -r requirements.txt
+  COPY . .
+  EXPOSE 8000
+  CMD ["python", "main.py"]
+  ```
+
+- Built and tested the container:
+  ```bash
+  docker build -t flask-app .
+  docker run -p 8000:8000 flask-app
+  ```
 
 ---
 
-## 🛠️ Troubleshooting Tips
+## ☸️ Phase 3 — Kubernetes Deployment
 
-- Use `ansible -m ping all` to verify VM connectivity.
-- Jenkins initial password: check `/var/lib/jenkins/secrets/initialAdminPassword`.
-- Gitea logs: `/var/lib/gitea/log/`, MySQL logs: `/var/log/mysql/`.
-- SonarQube logs: `/opt/sonarqube/logs/`.
+- Deployed the Flask app to Kubernetes with a **Deployment**, **Service**, and **Ingress**.
+- Example manifest (`webappv1.yaml`):
+  ```yaml
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: webapp
+    namespace: app-v1
+  spec:
+    replicas: 4
+    selector:
+      matchLabels:
+        app: webapp
+    template:
+      metadata:
+        labels:
+          app: webapp
+      spec:
+        containers:
+          - name: webapp
+            image: docker.io/angsdocker/web-app:v1
+            ports:
+              - containerPort: 8000
+  ---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: webapp
+    namespace: app-v1
+  spec:
+    selector:
+      app: webapp
+    ports:
+      - port: 80
+        targetPort: 8000
+  ---
+  apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    name: webapp
+    namespace: app-v1
+    annotations:
+      kubernetes.io/ingress.class: nginx
+  spec:
+    rules:
+      - host: web.lab.local
+        http:
+          paths:
+            - path: /
+              pathType: Prefix
+              backend:
+                service:
+                  name: webapp
+                  port:
+                    number: 80
+  ```
+
+- Verified the app via `http://web.lab.local`.
 
 ---
 
-## ✍️ Author Notes
+## 🔁 Phase 4 — CI/CD with Jenkins
 
-- This homelab is part of a learning journey into DevOps and DevSecOps practices.
-- Regular updates and improvements are documented in GitHub.
+- Configured **Jenkins** with:
+  - Git plugin
+  - Docker plugin
+  - Kubernetes CLI
+  - Credentials for Docker Hub and kubeconfig
+- Jenkins automatically:
+  1. Pulls code from GitHub on push  
+  2. Builds the Docker image  
+  3. Pushes it to Docker Hub  
+  4. Updates the Kubernetes deployment with the new image tag  
+  5. Rolls out the new version automatically
+
+**Jenkinsfile:**
+```groovy
+pipeline {
+    agent any
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
+        KUBECONFIG_CREDENTIALS = credentials('kubeconfig-file')
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/angsgit/devops_project.git'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t angsdocker/web-app:${BUILD_NUMBER} .'
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                sh '''
+                    echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login -u ${DOCKERHUB_CREDENTIALS_USR} --password-stdin
+                    docker push angsdocker/web-app:${BUILD_NUMBER}
+                    docker tag angsdocker/web-app:${BUILD_NUMBER} angsdocker/web-app:latest
+                    docker push angsdocker/web-app:latest
+                '''
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh '''
+                    sed -i s#image:.*#image: angsdocker/web-app:${BUILD_NUMBER}#g webappv1.yaml
+                    kubectl apply -f webappv1.yaml -n app-v1
+                    kubectl rollout status deployment/webapp -n app-v1
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Deployment successful!"
+        }
+        failure {
+            echo "❌ Deployment failed!"
+        }
+    }
+}
+```
+
+---
+
+## 📊 Phase 5 — Monitoring & Observability
+
+- Installed **Helm**:
+  ```bash
+  curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+  ```
+- Added the Prometheus community repo and installed the monitoring stack:
+  ```bash
+  helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+  helm repo update
+  kubectl create namespace monitoring
+  helm install kube-prometheus prometheus-community/kube-prometheus-stack -n monitoring
+  ```
+- Exposed Grafana to the host:
+  ```bash
+  kubectl -n monitoring patch svc kube-prometheus-grafana -p '{"spec": {"type": "NodePort"}}'
+  kubectl -n monitoring get svc kube-prometheus-grafana
+  ```
+  → Accessed Grafana via `http://<master-node-ip>:<nodeport>`
+
+- Default login:
+  ```
+  Username: admin
+  Password: (get using `kubectl get secret ... | base64 -d`)
+  ```
+
+- Verified dashboards: Kubernetes cluster, node, and pod metrics working correctly.
+
+---
+
+## 🧠 Key Learnings
+
+- Full DevOps pipeline integration from code to Kubernetes
+- Automating deployments using Jenkins and Git webhooks
+- Managing manifests and namespaces in Kubernetes
+- Deploying Helm charts for Prometheus & Grafana
+- Observability and metrics visualization
+- Understanding node taints, resource requests, and pod scheduling
+
+---
+
+## 🗺️ Next Steps (Planned)
+
+- Add custom Grafana dashboards for Flask app metrics  
+- Integrate Alertmanager notifications (Slack or email)  
+- Manage infrastructure with Terraform (IaC)  
+- Deploy to a cloud-managed Kubernetes cluster (EKS / AKS)
+
+---
+
+## 📂 Repository Structure
+
+```
+.
+project/
+|
+|
+├── README.md                      # Full project documentation and setup guide
+├── .gitignore                     # Ignore unnecessary files (logs, creds, etc.)
+│
+|
+├── app/                           # Flask application source code
+│   ├── main.py                    # Flask entry point
+│   ├── requirements.txt           # Python dependencies
+│   ├── Dockerfile                 # Container build instructions
+│ 
+│
+├── jenkins/                       # Jenkins CI/CD pipeline configuration
+│   ├── Jenkinsfile                # Pipeline for build → push → deploy to K8s
+│   
+│  
+├── k8s/                           # Kubernetes manifests and Helm resources
+│   ├── webappv1.yaml              # Deployment, Service, and Ingress for the Flask app
+│   ├── namespace.yaml             # Custom namespace definition (e.g., app-v1)
+│   ├── helm/                      # Helm charts for monitoring stack
+│   │   └── 
+│ 
+│
+├── monitoring/                    # Monitoring stack (Helm-based)
+│   ├── prometheus/                # Prometheus custom configs
+│   │   └── .gitkeep
+│   ├── grafana/                   # Grafana dashboards and custom configs
+│   │   ├── dashboards/
+│   │   │   ├── 
+│   │   │   └── 
+│   │
+│
+|
+├── terraform/                     # Infrastructure as Code (IaC)
+│   ├──                     
+|
+|
+├── ansible/                       # Config Automation
+│   ├── playbooks/
+│   │   ├── 
+│   │   └──
+│   └── 
+│
+|
+└── docs/                          # Documentation and screenshots
+    ├── architecture_diagram.png   # Overview of Jenkins → DockerHub → K8s pipeline
+    ├── screenshots/               # Grafana, Jenkins UI, Flask App
+    │   ├── 
+    │   ├── 
+    │   ├── 
+    │   └── 
+    └── 
+
+```
+
+---
+
+## 🔒 Security
+
+All sensitive credentials and configuration files (e.g., Docker Hub tokens, kubeconfig, Grafana admin passwords) are **not stored in this repository**.  
+They are securely managed using **Jenkins Credentials**, **Kubernetes Secrets**, or **local environment variables**.
+
+This project follows **DevSecOps best practices**, ensuring:
+- No hardcoded passwords, API keys, or tokens are present in source control.
+- Jenkins pipelines use credential IDs only (not plaintext secrets).
+- Sensitive cluster configurations (like kubeconfig) remain private and stored securely on the control node.
+- Public documentation and manifests contain only non-sensitive example values.
+
+---
+
+
+---
+
+## 👤 Author
+**Angad**  
+DevOps & Cybersecurity Engineer  
+[GitHub: angsgit](https://github.com/angsgit)
