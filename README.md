@@ -1,9 +1,15 @@
 # 🚀 DevOps Home Lab — CI/CD, Kubernetes & Monitoring
 
 ## 📘 Overview
-This project demonstrates a complete DevOps CI/CD pipeline using a simple Flask-based web application deployed on a Kubernetes cluster.
-It covers source control, build automation, containerization, orchestration, monitoring, and observability - all running locally in a fully functional home lab environment.
-The setup also emphasizes high availability (HA), disaster recovery (DR), and service reliability, reflecting real-world enterprise DevOps and SRE practices.
+## 📖 Project Overview
+
+This project demonstrates a complete **DevOps CI/CD pipeline** using a simple **Flask-based web application** deployed on a **Kubernetes cluster**.  
+
+It covers key DevOps lifecycle components — **source control, build automation, containerization, orchestration, monitoring, and observability** — all running locally within a **fully functional home lab environment**.
+
+The setup also emphasizes **High Availability (HA)**, **Disaster Recovery (DR)**, and **Service Reliability**, reflecting real-world enterprise **DevOps** and **Site Reliability Engineering (SRE)** practices.  
+
+In future phases, the architecture will expand to include **multi-zone / multi-region cloud deployment** and **safe deployment strategies** such as **Blue-Green** and **Canary releases** to ensure zero-downtime updates.
 
 ---
 
