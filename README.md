@@ -13,18 +13,18 @@ The setup also emphasizes high availability (HA), disaster recovery (DR), and se
 
 | Category | Tool | Purpose |
 |-----------|------|----------|
-| **Source Control** | [GitHub] (https://github.com) | Hosts application and IaC repositories |
-| **CI/CD Automation** | [Jenkins] (https://www.jenkins.io) | Automates build, test, and deploy pipeline |
-| **Containerization** | [Docker] (https://www.docker.com) | Packages the Flask app and dependencies |
-| **Orchestration** | [Kubernetes] (https://kubernetes.io) | Deploys and manages application containers |
-| **Configuration Management** | [Ansible] (https://www.ansible.com) | Automates environment setup across VMs |
-| **Infrastructure as Code (IaC)** | [Terraform] (https://www.terraform.io) |  Automates VM and cluster provisioning |
-| **Code Quality & Scanning** | [SonarQube] (https://www.sonarqube.org) | Static code analysis integrated into CI |
-| **Artifact Registry** | [DockerHub] (https://hub.docker.com) | Stores and versions container images |
-| **Monitoring & Metrics** | [Prometheus] (https://prometheus.io) | Collects metrics from Kubernetes and applications |
-| **Visualization & Dashboards** | [Grafana] (https://grafana.com) | Visualizes performance and reliability metrics |
-| **Reverse Proxy & Load Balancing** | [NGINX] (https://www.nginx.com) | Provides ingress and routing for web traffic |
-| **Programming Language** | [Python] (https://flask.palletsprojects.com) | Simple web app used for demonstration |
+| **Source Control** | GitHub | Hosts application and IaC repositories |
+| **CI/CD Automation** | Jenkins | Automates build, test, and deploy pipeline |
+| **Containerization** | Docker | Packages the Flask app and dependencies |
+| **Orchestration** | Kubernetes | Deploys and manages application containers |
+| **Configuration Management** | Ansible | Automates environment setup across VMs |
+| **Infrastructure as Code (IaC)** | Terraform |  Automates VM and cluster provisioning |
+| **Code Quality & Scanning** | SonarQube | Static code analysis integrated into CI |
+| **Artifact Registry** | DockerHub | Stores and versions container images |
+| **Monitoring & Metrics** | Prometheus | Collects metrics from Kubernetes and applications |
+| **Visualization & Dashboards** | Grafana | Visualizes performance and reliability metrics |
+| **Reverse Proxy & Load Balancing** | NGINX  | Provides ingress and routing for web traffic |
+| **Programming Language** | Python | Simple web app used for demonstration |
 
 
 ---
