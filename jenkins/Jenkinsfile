@@ -40,6 +40,9 @@ pipeline {
 							sed -i "s|image: .*|image: $IMAGE_NAME:$BUILD_NUMBER|g" $KUBE_DEPLOYMENT
 							kubectl apply -f $KUBE_DEPLOYMENT -n app-v1
 							kubectl rollout status deployment/$APP_NAME -n app-v1
+
+                            echo "📈 Applying monitoring configs..."
+                            kubectl apply -f monitoring/prometheus/flaskapp-servicemonitor.yaml -n monitoring
                     '''
                 }
             }
