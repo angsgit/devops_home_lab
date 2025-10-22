@@ -6,7 +6,7 @@ pipeline {
         KUBECONFIG_CREDENTIALS = credentials('kubeconfig')    		// kubeconfig secret file ID in Jenkins
         IMAGE_NAME = "angsdocker/web-app"							//get image from dockerhub
         APP_NAME = "webapp"									// Deployment name from k8s manifest
-        KUBE_DEPLOYMENT = "webappv1.yaml"				//k8s deployment manifest
+        KUBE_DEPLOYMENT = "k8s/webappv1.yaml"				//k8s deployment manifest location on github
     }
 
     stages {
