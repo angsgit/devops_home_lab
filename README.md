@@ -1,4 +1,4 @@
-# 🚀 DevOps Home Lab — CI/CD, Kubernetes & Monitoring
+# 🚀 Home Lab - CI/CD, Kubernetes & Monitoring
 
 ## 📘 Overview
 ## 📖 Project Overview
