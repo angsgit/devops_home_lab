@@ -33,7 +33,6 @@ The setup also emphasizes high availability (HA), disaster recovery (DR), and se
 
 This setup represents a **real-world DevOps pipeline** — from code commit to deployment and monitoring — running entirely inside a **local Kubernetes cluster**.
 
-```text
            ┌────────────────┐
            │   Developer    │
            │   (Git Push)   │
@@ -74,7 +73,7 @@ This setup represents a **real-world DevOps pipeline** — from code commit to d
         │     Grafana         │
         │ (Monitoring Stack)  │
         └─────────────────────┘
----
+
 
 ---
 
