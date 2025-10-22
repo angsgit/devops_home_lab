@@ -77,7 +77,7 @@ This setup represents a **real-world DevOps pipeline** — from code commit to d
 
 ---
 
-## 🏗️ Phase 1 — Flask App Setup
+## 🏗️ Phase 1 - Flask App Setup
 
 - Built a simple Python Flask application with `/` and `/metrics` endpoints.
 - Added a `requirements.txt` file for dependencies.
@@ -89,7 +89,7 @@ This setup represents a **real-world DevOps pipeline** — from code commit to d
 
 ---
 
-## 🐳 Phase 2 — Dockerization
+## 🐳 Phase 2 - Dockerization
 
 - Created a `Dockerfile`:
   ```dockerfile
@@ -110,10 +110,10 @@ This setup represents a **real-world DevOps pipeline** — from code commit to d
 
 ---
 
-## ☸️ Phase 3 — Kubernetes Deployment
+## ☸️ Phase 3 - Kubernetes Deployment
 
 - Deployed the Flask app to Kubernetes with a **Deployment**, **Service**, and **Ingress**.
-- Example manifest (`webappv1.yaml`):
+- Example manifest:
   ```yaml
   apiVersion: apps/v1
   kind: Deployment
@@ -122,58 +122,14 @@ This setup represents a **real-world DevOps pipeline** — from code commit to d
     namespace: app-v1
   spec:
     replicas: 4
-    selector:
-      matchLabels:
-        app: webapp
-    template:
-      metadata:
-        labels:
-          app: webapp
-      spec:
-        containers:
-          - name: webapp
-            image: docker.io/angsdocker/web-app:v1
-            ports:
-              - containerPort: 8000
-  ---
-  apiVersion: v1
-  kind: Service
-  metadata:
-    name: webapp
-    namespace: app-v1
-  spec:
-    selector:
-      app: webapp
-    ports:
-      - port: 80
-        targetPort: 8000
-  ---
-  apiVersion: networking.k8s.io/v1
-  kind: Ingress
-  metadata:
-    name: webapp
-    namespace: app-v1
-    annotations:
-      kubernetes.io/ingress.class: nginx
-  spec:
-    rules:
-      - host: web.lab.local
-        http:
-          paths:
-            - path: /
-              pathType: Prefix
-              backend:
-                service:
-                  name: webapp
-                  port:
-                    number: 80
+  
   ```
 
 - Verified the app via `http://web.lab.local`.
 
 ---
 
-## 🔁 Phase 4 — CI/CD with Jenkins
+## 🔁 Phase 4 - CI/CD with Jenkins
 
 - Configured **Jenkins** with:
   - Git plugin
@@ -201,50 +157,11 @@ pipeline {
             steps {
                 git branch: 'main', url: 'https://github.com/angsgit/devops_project.git'
             }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                sh 'docker build -t angsdocker/web-app:${BUILD_NUMBER} .'
-            }
-        }
-
-        stage('Push to Docker Hub') {
-            steps {
-                sh '''
-                    echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login -u ${DOCKERHUB_CREDENTIALS_USR} --password-stdin
-                    docker push angsdocker/web-app:${BUILD_NUMBER}
-                    docker tag angsdocker/web-app:${BUILD_NUMBER} angsdocker/web-app:latest
-                    docker push angsdocker/web-app:latest
-                '''
-            }
-        }
-
-        stage('Deploy to Kubernetes') {
-            steps {
-                sh '''
-                    sed -i s#image:.*#image: angsdocker/web-app:${BUILD_NUMBER}#g webappv1.yaml
-                    kubectl apply -f webappv1.yaml -n app-v1
-                    kubectl rollout status deployment/webapp -n app-v1
-                '''
-            }
-        }
-    }
-
-    post {
-        success {
-            echo "✅ Deployment successful!"
-        }
-        failure {
-            echo "❌ Deployment failed!"
-        }
-    }
-}
 ```
 
 ---
 
-## 📊 Phase 5 — Monitoring & Observability
+## 📊 Phase 5 - Monitoring & Observability
 
 - Installed **Helm**:
   ```bash
@@ -252,9 +169,7 @@ pipeline {
   ```
 - Added the Prometheus community repo and installed the monitoring stack:
   ```bash
-  helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-  helm repo update
-  kubectl create namespace monitoring
+  helm repo add prometheus-community https://prometheus-community.github.io/helm-charts  
   helm install kube-prometheus prometheus-community/kube-prometheus-stack -n monitoring
   ```
 - Exposed Grafana to the host:
@@ -263,12 +178,6 @@ pipeline {
   kubectl -n monitoring get svc kube-prometheus-grafana
   ```
   → Accessed Grafana via `http://<master-node-ip>:<nodeport>`
-
-- Default login:
-  ```
-  Username: admin
-  Password: (get using `kubectl get secret ... | base64 -d`)
-  ```
 
 - Verified dashboards: Kubernetes cluster, node, and pod metrics working correctly.
 
