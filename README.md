@@ -169,6 +169,8 @@ pipeline {
             }
 ```
 
+![DEPLOYED APP](documentation/screenshots/jenkins.jpg)
+
 ---
 
 ## 📊 Phase 5 - Monitoring & Observability
@@ -190,6 +192,9 @@ pipeline {
   → Accessed Grafana via `http://<master-node-ip>:<nodeport>`
 
 - Verified dashboards: Kubernetes cluster, node, and pod metrics working correctly.
+
+![DEPLOYED APP](documentation/screenshots/promth.jpg)
+![DEPLOYED APP](documentation/screenshots/grafana.jpg)
 
 ---
 
