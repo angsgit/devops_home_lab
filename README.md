@@ -12,6 +12,7 @@ In future phases, the architecture will expand to include **multi-zone / multi-r
 
 ---
 
+
 ## 🧩 Project Architecture
 
 ## 🧰 Tech Stack & Tools Used
@@ -33,6 +34,7 @@ In future phases, the architecture will expand to include **multi-zone / multi-r
 
 
 ---
+
 
 ## 🏗️ High-Level Architecture & CI/CD Flow
 
@@ -82,6 +84,7 @@ This setup represents a **real-world DevOps pipeline** — from code commit to d
 
 ---
 
+
 ## 🏗️ Phase 1 - Flask App Setup
 
 - Built a simple Python Flask application with `/` and `/metrics` endpoints.
@@ -93,6 +96,7 @@ This setup represents a **real-world DevOps pipeline** — from code commit to d
 - Confirmed `/metrics` exposes Prometheus-style metrics for monitoring.
 
 ---
+
 
 ## 🐳 Phase 2 - Dockerization
 
@@ -114,6 +118,7 @@ This setup represents a **real-world DevOps pipeline** — from code commit to d
   ```
 
 ---
+
 
 ## ☸️ Phase 3 - Kubernetes Deployment
 
@@ -139,6 +144,7 @@ This setup represents a **real-world DevOps pipeline** — from code commit to d
 
 
 ---
+
 
 ## 🔁 Phase 4 - CI/CD with Jenkins
 
@@ -176,6 +182,7 @@ pipeline {
 
 ---
 
+
 ## 📊 Phase 5 - Monitoring & Observability
 
 - Installed **Helm**:
@@ -210,6 +217,7 @@ pipeline {
 
 ---
 
+
 ## 🧠 Key Learnings
 
 - Full DevOps pipeline integration from code to Kubernetes
@@ -221,6 +229,7 @@ pipeline {
 
 ---
 
+
 ## 🗺️ Next Steps (Planned)
 
 - Add custom Grafana dashboards for Flask app metrics  
@@ -229,6 +238,7 @@ pipeline {
 - Deploy to a cloud-managed Kubernetes cluster (EKS / AKS)
 
 ---
+
 
 ## 📂 Repository Structure
 
@@ -291,6 +301,7 @@ project/
 ```
 
 ---
+
 
 ## 🔒 Security
 
