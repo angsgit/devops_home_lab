@@ -10,7 +10,7 @@ The setup also emphasizes **High Availability (HA)**, **Disaster Recovery (DR)**
 
 In future phases, the architecture will expand to include **multi-zone / multi-region cloud deployment** and **safe deployment strategies** such as **Blue-Green** and **Canary releases** to ensure zero-downtime updates.
 
-<hr style="border: 2px solid black;">
+<hr style="border: 3px solid #333;">
 
 
 ## 🧩 Project Architecture
