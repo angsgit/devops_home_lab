@@ -197,6 +197,7 @@ pipeline {
 **Prometheus scraping metrics and Grafana Visualising:**
 
 ![DEPLOYED APP](documentation/screenshots/promth.jpg)
+
 ![DEPLOYED APP](documentation/screenshots/grafana.jpg)
 
 **Custom Dashboard in Grafana for APP Metrics (HTTP Total Requests):**
