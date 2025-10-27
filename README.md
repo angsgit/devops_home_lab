@@ -266,7 +266,7 @@ project/
 │   └── 
 │
 |
-└── docs/                          # Documentation and screenshots
+└── documentation/                          # Documentation and screenshots
     ├── architecture_diagram.png   # Overview of Jenkins → DockerHub → K8s pipeline
     ├── screenshots/               # Grafana, Jenkins UI, Flask App
     │   ├── 
@@ -296,6 +296,6 @@ This project follows **DevSecOps best practices**, ensuring:
 ---
 
 ## 👤 Author
-**Angad**  
+**Angad Singh**  
 DevOps & Cybersecurity Engineer  
 [GitHub: angsgit](https://github.com/angsgit)
