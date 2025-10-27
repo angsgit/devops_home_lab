@@ -32,8 +32,6 @@ In future phases, the architecture will expand to include **multi-zone / multi-r
 | **Reverse Proxy & Load Balancing** | NGINX  | Provides ingress and routing for web traffic |
 | **Programming Language** | Python | Simple web app used for demonstration |
 
-
----
 ---
 
 
