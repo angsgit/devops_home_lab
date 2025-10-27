@@ -129,6 +129,7 @@ This setup represents a **real-world DevOps pipeline** — from code commit to d
     replicas: 4
   
   ```
+  **Running Pods**
   ![DEPLOYED APP](documentation/screenshots/k8s.jpg)
 
 - Verified the app via `http://homelab:30788`.
