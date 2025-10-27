@@ -170,6 +170,8 @@ pipeline {
             }
 ```
 
+**Jenkins Pipeline:**
+
 ![DEPLOYED APP](documentation/screenshots/jenkins.jpg)
 
 ---
