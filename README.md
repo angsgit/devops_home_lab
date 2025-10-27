@@ -198,9 +198,11 @@ pipeline {
 
 ![DEPLOYED APP](documentation/screenshots/promth.jpg)
 
+
 **Grafana Visualising Metrics:**
 
 ![DEPLOYED APP](documentation/screenshots/grafana.jpg)
+
 
 **Custom Dashboard in Grafana for APP Metrics (HTTP Total Requests):**
 
