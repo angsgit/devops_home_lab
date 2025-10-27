@@ -194,9 +194,11 @@ pipeline {
   ```
   → Accessed Grafana via `http://<master-node-ip>:<nodeport>`
 
-**Prometheus scraping metrics and Grafana Visualising:**
+**Prometheus scraping metrics**
 
 ![DEPLOYED APP](documentation/screenshots/promth.jpg)
+
+**Grafana Visualising Metrics:**
 
 ![DEPLOYED APP](documentation/screenshots/grafana.jpg)
 
