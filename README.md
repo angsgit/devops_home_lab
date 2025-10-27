@@ -131,7 +131,10 @@ This setup represents a **real-world DevOps pipeline** — from code commit to d
   
   ```
 
-- Verified the app via `http://web.lab.local`.
+- Verified the app via `http://homelab:30788`.
+
+![DEPLOYED APP](documentation/screenshots/app.jpg)
+
 
 ---
 
