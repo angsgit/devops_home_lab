@@ -194,7 +194,7 @@ pipeline {
   ```
   → Accessed Grafana via `http://<master-node-ip>:<nodeport>`
 
-- **Verified dashboards: Kubernetes cluster, node, and pod metrics working correctly.**
+**Prometheus scraping metrics and Grafana Visualising:**
 
 ![DEPLOYED APP](documentation/screenshots/promth.jpg)
 ![DEPLOYED APP](documentation/screenshots/grafana.jpg)
