@@ -130,9 +130,10 @@ This setup represents a **real-world DevOps pipeline** — from code commit to d
   
   ```
   **Running Pods**
+
   ![DEPLOYED APP](documentation/screenshots/k8s.jpg)
 
-- Verified the app via `http://homelab:30788`.
+ **Verified the app via: http://homelab:30788**
 
 ![DEPLOYED APP](documentation/screenshots/app.jpg)
 
