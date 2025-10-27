@@ -130,12 +130,11 @@ This setup represents a **real-world DevOps pipeline** — from code commit to d
     replicas: 4
   
   ```
-
-  (documentation/screenshots/k8s.jpg)
+  ![DEPLOYED APP](documentation/screenshots/k8s.jpg)
 
 - Verified the app via `http://homelab:30788`.
 
-(documentation/screenshots/app.jpg)
+![DEPLOYED APP](documentation/screenshots/app.jpg)
 
 
 ---
