@@ -1,7 +1,6 @@
 # 🚀 Home Lab - CI/CD, Kubernetes & Monitoring
 
 ## 📘 Overview
-## 📖 Project Overview
 
 This project demonstrates a complete **DevOps CI/CD pipeline** using a simple **Flask-based web application** deployed on a **Kubernetes cluster**.  
 
