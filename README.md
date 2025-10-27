@@ -10,7 +10,7 @@ The setup also emphasizes **High Availability (HA)**, **Disaster Recovery (DR)**
 
 In future phases, the architecture will expand to include **multi-zone / multi-region cloud deployment** and **safe deployment strategies** such as **Blue-Green** and **Canary releases** to ensure zero-downtime updates.
 
----
+<hr style="border: 2px solid black;">
 
 
 ## 🧩 Project Architecture
@@ -32,7 +32,7 @@ In future phases, the architecture will expand to include **multi-zone / multi-r
 | **Reverse Proxy & Load Balancing** | NGINX  | Provides ingress and routing for web traffic |
 | **Programming Language** | Python | Simple web app used for demonstration |
 
-**---**
+---
 
 
 ## 🏗️ High-Level Architecture & CI/CD Flow
