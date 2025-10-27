@@ -190,7 +190,7 @@ pipeline {
   ```
   → Accessed Grafana via `http://<master-node-ip>:<nodeport>`
 
-- Verified dashboards: Kubernetes cluster, node, and pod metrics working correctly.
+- **Verified dashboards: Kubernetes cluster, node, and pod metrics working correctly.**
 
 ![DEPLOYED APP](documentation/screenshots/promth.jpg)
 ![DEPLOYED APP](documentation/screenshots/grafana.jpg)
