@@ -168,18 +168,7 @@ pipeline {
             }
         }
 
-        // --------------------------
-        // TRIGGER APP PIPELINE
-        // --------------------------
-        stage('Trigger App Deployment') {
-            when {
-                expression { return params.DESTROY_INFRA == false }
-            }
-            steps {
-                echo "🚀 Triggering application deployment pipeline..."
-                build job: 'flaskapp-cicd', wait: true
-            }
-        }
+       
     }
 
     post {
