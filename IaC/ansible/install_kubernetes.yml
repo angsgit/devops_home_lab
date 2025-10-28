@@ -193,10 +193,9 @@
         mode: '0644'
 
     - name: Install Flannel CNI network
-      shell: |
-        su - ubuntu -c "kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml"
+      shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
       args:
-        warn: false
+        chdir: /home/ubuntu
 
     - name: Get join command from master
       shell: kubeadm token create --print-join-command
