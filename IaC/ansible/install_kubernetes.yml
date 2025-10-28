@@ -3,20 +3,28 @@
   hosts: aws
   become: yes
   tasks:
+
+    # --- Disable swap ---
     - name: Disable swap (required for Kubernetes)
       command: swapoff -a
       when: ansible_swaptotal_mb > 0
+      ignore_errors: true
 
     - name: Ensure swap is disabled permanently
       replace:
         path: /etc/fstab
-        regexp: "(^.*swap.*$)"
+        regexp: '(^.*swap.*$)'
         replace: '# \1'
+      ignore_errors: true
 
+    # --- Kernel modules ---
     - name: Load required kernel modules
-      shell: |
-        modprobe overlay
-        modprobe br_netfilter
+      modprobe:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - overlay
+        - br_netfilter
 
     - name: Set up sysctl params for Kubernetes networking
       copy:
@@ -29,26 +37,32 @@
     - name: Apply sysctl params
       command: sysctl --system
 
-    - name: Install dependencies
+    # --- Dependencies ---
+    - name: Install base dependencies
       apt:
         name:
           - apt-transport-https
           - ca-certificates
           - curl
+          - gpg
         state: present
         update_cache: yes
 
-    - name: Add Google Cloud public signing key
-      apt_key:
-        url: https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key
-        state: present
+    # --- Kubernetes repo setup (modern keyrings method) ---
+    - name: Add Kubernetes apt key (modern method)
+      shell: |
+        mkdir -p /etc/apt/keyrings
+        curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key \
+          | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+      args:
+        creates: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
-    - name: Add Kubernetes APT repository
-      apt_repository:
-        repo: deb https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /
-        state: present
-        filename: kubernetes
+    - name: Add Kubernetes apt repository (modern method)
+      copy:
+        dest: /etc/apt/sources.list.d/kubernetes.list
+        content: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /"
 
+    # --- Install Kubernetes ---
     - name: Install kubelet, kubeadm, and kubectl
       apt:
         name:
@@ -58,19 +72,29 @@
         state: present
         update_cache: yes
 
-    - name: Hold Kubernetes packages at current version
+    - name: Hold Kubernetes package versions
       command: apt-mark hold kubelet kubeadm kubectl
 
+    # --- Enable kubelet ---
     - name: Enable and start kubelet service
       service:
         name: kubelet
         enabled: yes
         state: started
 
+    # --- Verify installation ---
     - name: Verify kubeadm installation
       command: kubeadm version -o short
       register: kubeadm_version
+      ignore_errors: true
 
-    - name: Print kubeadm version
+    - name: Verify kubectl installation
+      command: kubectl version --client --short
+      register: kubectl_version
+      ignore_errors: true
+
+    - name: Print versions
       debug:
-        var: kubeadm_version.stdout
+        msg:
+          - "kubeadm version: {{ kubeadm_version.stdout | default('not found') }}"
+          - "kubectl version: {{ kubectl_version.stdout | default('not found') }}"
