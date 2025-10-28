@@ -4,31 +4,30 @@
   become: yes
   vars:
     app_name: webapp
-    namespace: "{{ namespace | default('app-v1') }}"
+    k8s_namespace: "{{ k8s_namespace | default('app-v1') }}"
     image_name: "{{ image_name | default('angsdocker/web-app:latest') }}"
     manifest_dir: /home/ubuntu/kubernetes
-    
+
   tasks:
     - name: Ensure namespace exists
-      shell: kubectl get ns {{ namespace }} || kubectl create ns {{ namespace }}
-      args:
-        warn: false
+      shell: |
+        kubectl get ns {{ k8s_namespace }} || kubectl create ns {{ k8s_namespace }}
 
     - name: Copy Kubernetes manifests
       copy:
         src: "{{ playbook_dir }}/../../kubernetes/"
         dest: "{{ manifest_dir }}"
         owner: ubuntu
-        mode: "0644"
+        mode: '0644'
 
     - name: Update image in manifest
-      shell: >
+      shell: |
         sed -i "s|image: .*|image: {{ image_name }}|g" {{ manifest_dir }}/webappv1.yaml
-      args:
-        warn: false
 
     - name: Apply deployment and service
-      shell: kubectl apply -f {{ manifest_dir }}/webappv1.yaml -n {{ namespace }}
+      shell: |
+        kubectl apply -f {{ manifest_dir }}/webappv1.yaml -n {{ k8s_namespace }}
 
     - name: Wait for rollout
-      shell: kubectl rollout status deployment/{{ app_name }} -n {{ namespace }}
+      shell: |
+        kubectl rollout status deployment/{{ app_name }} -n {{ k8s_namespace }} --timeout=120s
