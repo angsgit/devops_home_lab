@@ -247,6 +247,8 @@
         mode: '0755'
 
     - name: Join worker nodes to cluster
-      command: sh /tmp/join-command.sh
-      args:
-        creates: /etc/kubernetes/kubelet.conf
+      shell: sh /tmp/join-command.sh --cri-socket unix:///var/run/cri-dockerd.sock
+      register: join_output
+      retries: 3
+      delay: 10
+      until: join_output.rc == 0
