@@ -192,23 +192,29 @@
         group: ubuntu
         mode: '0644'
 
-    - name: Wait for Kubernetes API server to be ready
+    - name: Wait for Kubernetes API server and node readiness
       shell: |
-        for i in {1..15}; do
-          if kubectl get nodes &>/dev/null; then
-            echo "✅ API server is ready"
+        echo "⏳ Waiting for Kubernetes API server and node to become Ready..."
+        export KUBECONFIG=/etc/kubernetes/admin.conf
+        for i in {1..40}; do
+          if systemctl is-active kubelet | grep -q active && \
+             pgrep kube-apiserver >/dev/null 2>&1 && \
+             kubectl get nodes --no-headers 2>/dev/null | grep -q 'Ready'; then
+            echo "✅ Kubernetes control plane is fully ready!"
             exit 0
           fi
-          echo "⏳ Waiting for API server..."
-          sleep 10
+          echo "Still waiting... ($i)"
+          sleep 15
         done
-        echo "❌ API server did not become ready in time"
+        echo "❌ Control plane did not become ready in time."
         exit 1
       args:
         chdir: /home/ubuntu
 
     - name: Install Flannel CNI network
-      shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml --validate=false
+      shell: |
+        export KUBECONFIG=/etc/kubernetes/admin.conf
+        kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml --validate=false
       args:
         chdir: /home/ubuntu
 
@@ -243,4 +249,3 @@
       command: sh /tmp/join-command.sh
       args:
         creates: /etc/kubernetes/kubelet.conf
-        
