@@ -95,86 +95,72 @@
           - "kubeadm version: {{ kubeadm_version.stdout | default('not found') }}"
           - "kubectl version: {{ kubectl_version.stdout | default('not found') }}"
 
+
 # --- Initialize Master Node ---
-
-- name: Initialize Kubernetes master
-  hosts: master
+- hosts: master
   become: yes
-  command: kubeadm init --pod-network-cidr=10.244.0.0/16
-  register: kubeadm_init
-  args:
-    creates: /etc/kubernetes/admin.conf  # prevents re-init if rerun
+  tasks:
+    - name: Initialize Kubernetes master
+      command: kubeadm init --pod-network-cidr=10.244.0.0/16
+      register: kubeadm_init
+      args:
+        creates: /etc/kubernetes/admin.conf
 
-- name: Create .kube directory for ubuntu user
-  hosts: master
-  become: yes
-  file:
-    path: /home/ubuntu/.kube
-    state: directory
-    owner: ubuntu
-    group: ubuntu
-    mode: '0755'
+    - name: Create .kube directory for ubuntu user
+      file:
+        path: /home/ubuntu/.kube
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+        mode: '0755'
 
-- name: Copy kubeconfig to ubuntu user
-  hosts: master
-  become: yes
-  command: >
-    cp /etc/kubernetes/admin.conf /home/ubuntu/.kube/config
-  args:
-    creates: /home/ubuntu/.kube/config
+    - name: Copy kubeconfig to ubuntu user
+      command: >
+        cp /etc/kubernetes/admin.conf /home/ubuntu/.kube/config
+      args:
+        creates: /home/ubuntu/.kube/config
 
-- name: Change ownership of kubeconfig
-  hosts: master
-  become: yes
-  file:
-    path: /home/ubuntu/.kube/config
-    owner: ubuntu
-    group: ubuntu
-    mode: '0644'
+    - name: Change ownership of kubeconfig
+      file:
+        path: /home/ubuntu/.kube/config
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
 
-- name: Install Flannel CNI network
-  hosts: master
-  become: yes
-  shell: |
-    su - ubuntu -c "kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml"
-  args:
-    warn: false
+    - name: Install Flannel CNI network
+      shell: |
+        su - ubuntu -c "kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml"
+      args:
+        warn: false
 
-# --- Generate and fetch join command ---
-- name: Get join command from master
-  hosts: master
-  become: yes
-  shell: kubeadm token create --print-join-command
-  register: join_cmd
+    - name: Get join command from master
+      shell: kubeadm token create --print-join-command
+      register: join_cmd
 
-- name: Save join command to file
-  hosts: master
-  become: yes
-  copy:
-    content: "{{ join_cmd.stdout }}"
-    dest: /tmp/join-command.sh
-    mode: '0755'
+    - name: Save join command to file
+      copy:
+        content: "{{ join_cmd.stdout }}"
+        dest: /tmp/join-command.sh
+        mode: '0755'
 
-- name: Fetch join command to local machine
-  hosts: master
-  become: yes
-  fetch:
-    src: /tmp/join-command.sh
-    dest: /tmp/join-command.sh
-    flat: yes
+    - name: Fetch join command to local machine
+      fetch:
+        src: /tmp/join-command.sh
+        dest: /tmp/join-command.sh
+        flat: yes
 
 # --- Join Worker Nodes ---
-- name: Copy join command to workers
-  hosts: workers
+- hosts: workers
   become: yes
-  copy:
-    src: /tmp/join-command.sh
-    dest: /tmp/join-command.sh
-    mode: '0755'
+  tasks:
+    - name: Copy join command to workers
+      copy:
+        src: /tmp/join-command.sh
+        dest: /tmp/join-command.sh
+        mode: '0755'
 
-- name: Join worker nodes to cluster
-  hosts: workers
-  become: yes
-  command: sh /tmp/join-command.sh
-  args:
-    creates: /etc/kubernetes/kubelet.conf
+    - name: Join worker nodes to cluster
+      command: sh /tmp/join-command.sh
+      args:
+        creates: /etc/kubernetes/kubelet.conf
+
