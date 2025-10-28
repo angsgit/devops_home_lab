@@ -5,4 +5,7 @@ variable "instance_type" {
 
 variable "key_name" {
   description = "Name of the AWS key pair for SSH"
+  type        = string
+  default     = "angs-key" # AWS EC2 > Key Pairs
 }
+
