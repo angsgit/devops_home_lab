@@ -23,9 +23,9 @@ kind: Service
 metadata:
   name: webapp
 spec:
-  type: NodePort
   selector:
     app: webapp
+  type: NodePort
   ports:
     - port: 80
       targetPort: 5000
