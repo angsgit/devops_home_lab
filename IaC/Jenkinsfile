@@ -21,13 +21,14 @@ pipeline {
                     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-creds']]) {
                         sh '''
                             terraform init
-                            terraform plan -out=tfplan
-                            terraform apply -auto-approve tfplan
+                            terraform apply -auto-approve
+                            terraform output -raw ec2_public_ip > ../ansible/host_ip.txt
                         '''
                     }
                 }
             }
         }
+
 
         stage('Configure with Ansible') {
             steps {
@@ -35,6 +36,9 @@ pipeline {
                     withCredentials([sshUserPrivateKey(credentialsId: 'aws-ssh-key', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER')]) {
                         sh '''
                             export ANSIBLE_HOST_KEY_CHECKING=False
+                            IP=$(cat host_ip.txt)
+                            echo "[aws]" > inventory.ini
+                            echo "$IP ansible_user=ubuntu ansible_ssh_private_key_file=$SSH_KEY" >> inventory.ini
                             ansible -i inventory.ini aws -m ping
                             ansible-playbook -i inventory.ini install_docker.yml
                             ansible-playbook -i inventory.ini install_kubernetes.yml
@@ -43,7 +47,7 @@ pipeline {
                 }
             }
         }
-    }
+
 
     post {
         success {
