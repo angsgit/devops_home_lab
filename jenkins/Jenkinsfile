@@ -3,10 +3,10 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub')        // Docker Hub credentials ID in Jenkins
-        KUBECONFIG_CREDENTIALS = credentials('kubeconfig_aws')       // kubeconfig secret file ID in Jenkins
-        IMAGE_NAME = "angsdocker/web-app"                        // Docker image name
-        APP_NAME = "webapp"                                      // Deployment name from K8s manifest
-        KUBE_DEPLOYMENT = "kubernetes/webappv1.yaml"             // K8s deployment manifest path in repo
+        KUBECONFIG_CREDENTIALS = credentials('kubeconfig_aws')  // kubeconfig secret file ID in Jenkins
+        IMAGE_NAME = "angsdocker/web-app"                       // Docker image name
+        APP_NAME = "webapp"                                     // Deployment name from K8s manifest
+        KUBE_DEPLOYMENT = "kubernetes/webappv1.yaml"            // K8s deployment manifest path in repo
     }
 
     stages {
@@ -50,19 +50,26 @@ pipeline {
             steps {
                 withEnv(["KUBECONFIG=${KUBECONFIG_CREDENTIALS}"]) {
                     sh '''
+                        echo "🌍 Fetching master IP from Terraform..."
+                        terraform -chdir=IaC init -input=false -backend=false >/dev/null
+                        MASTER_IP=$(terraform -chdir=IaC output -raw master_public_ip)
+
+                        if [ -z "$MASTER_IP" ]; then
+                            echo "❌ ERROR: Could not fetch master IP from Terraform output."
+                            exit 1
+                        fi
+
+                        echo "🔧 Updating kubeconfig with master IP: $MASTER_IP"
+                        sed -i "s|server: https://.*:6443|server: https://$MASTER_IP:6443|g" $KUBECONFIG
+
+                        echo "🔍 Verifying cluster connectivity..."
+                        kubectl cluster-info || { echo "❌ ERROR: Could not connect to cluster at $MASTER_IP"; exit 1; }
+
                         echo "🚀 Deploying to Kubernetes..."
-
-                        # Ensure namespace exists
                         kubectl get ns app-v1 || kubectl create ns app-v1
-
-                        # Update image tag in deployment manifest
                         sed -i "s|image: .*|image: $IMAGE_NAME:$BUILD_NUMBER|g" $KUBE_DEPLOYMENT
-
-                        # Apply updated manifest
                         kubectl apply -f $KUBE_DEPLOYMENT -n app-v1
-
-                        # Wait for deployment rollout (rollback on failure)
-                        kubectl rollout status deployment/$APP_NAME -n app-v1 || kubectl rollout undo deployment/$APP_NAME -n app-v1
+                        kubectl rollout status deployment/$APP_NAME -n app-v1
 
                         echo "📈 Applying monitoring configs..."
                         kubectl apply -f monitoring/prometheus/flaskapp-servicemonitor.yaml -n monitoring
