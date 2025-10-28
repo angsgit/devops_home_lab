@@ -93,7 +93,7 @@ pipeline {
                             export ANSIBLE_HOST_KEY_CHECKING=False
                             echo "🚀 Running Ansible playbook to deploy Flask app to Kubernetes..."
                             ansible-playbook -i inventory.ini deploy_k8s_app.yml \
-                                --extra-vars "image_name=angsdocker/web-app:${IMAGE_TAG} namespace=${APP_NAMESPACE}" \
+                                --extra-vars "image_name=angsdocker/web-app:latest namespace_name=app-v1" \
                                 --key-file $SSH_KEY
                         '''
                     }
