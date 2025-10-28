@@ -31,7 +31,7 @@ pipeline {
 
         stage('Configure with Ansible') {
             steps {
-                dir('iac/ansible') {
+                dir('IaC/ansible') {
                     withCredentials([sshUserPrivateKey(credentialsId: 'aws-ssh-key', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER')]) {
                         sh '''
                             export ANSIBLE_HOST_KEY_CHECKING=False
