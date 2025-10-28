@@ -2,26 +2,36 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub')    		// Docker Hub credentials ID in Jenkins
-        KUBECONFIG_CREDENTIALS = credentials('kubeconfig')    		// kubeconfig secret file ID in Jenkins
-        IMAGE_NAME = "angsdocker/web-app"							//get image from dockerhub
-        APP_NAME = "webapp"									// Deployment name from k8s manifest
-        KUBE_DEPLOYMENT = "kubernetes/webappv1.yaml"		//k8s deployment manifest location on github
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub')        // Docker Hub credentials ID in Jenkins
+        KUBECONFIG_CREDENTIALS = credentials('kubeconfig')       // kubeconfig secret file ID in Jenkins
+        IMAGE_NAME = "angsdocker/web-app"                        // Docker image name
+        APP_NAME = "webapp"                                      // Deployment name from K8s manifest
+        KUBE_DEPLOYMENT = "kubernetes/webappv1.yaml"             // K8s deployment manifest path in repo
     }
 
     stages {
+
+        // --------------------------
+        // CHECKOUT
+        // --------------------------
         stage('Checkout') {
             steps {
                 git branch: 'master', url: 'https://github.com/angsgit/devops_home_lab.git'
             }
         }
 
+        // --------------------------
+        // BUILD DOCKER IMAGE
+        // --------------------------
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t $IMAGE_NAME:$BUILD_NUMBER -f app/Dockerfile app'
-                }
+            }
         }
 
+        // --------------------------
+        // PUSH TO DOCKER HUB
+        // --------------------------
         stage('Push to Docker Hub') {
             steps {
                 sh '''
@@ -33,22 +43,38 @@ pipeline {
             }
         }
 
+        // --------------------------
+        // DEPLOY TO KUBERNETES
+        // --------------------------
         stage('Deploy to Kubernetes') {
             steps {
                 withEnv(["KUBECONFIG=${KUBECONFIG_CREDENTIALS}"]) {
                     sh '''
-							sed -i "s|image: .*|image: $IMAGE_NAME:$BUILD_NUMBER|g" $KUBE_DEPLOYMENT
-							kubectl apply -f $KUBE_DEPLOYMENT -n app-v1
-							kubectl rollout status deployment/$APP_NAME -n app-v1
+                        echo "🚀 Deploying to Kubernetes..."
 
-                            echo "📈 Applying monitoring configs..."
-                            kubectl apply -f monitoring/prometheus/flaskapp-servicemonitor.yaml -n monitoring
+                        # Ensure namespace exists
+                        kubectl get ns app-v1 || kubectl create ns app-v1
+
+                        # Update image tag in deployment manifest
+                        sed -i "s|image: .*|image: $IMAGE_NAME:$BUILD_NUMBER|g" $KUBE_DEPLOYMENT
+
+                        # Apply updated manifest
+                        kubectl apply -f $KUBE_DEPLOYMENT -n app-v1
+
+                        # Wait for deployment rollout (rollback on failure)
+                        kubectl rollout status deployment/$APP_NAME -n app-v1 || kubectl rollout undo deployment/$APP_NAME -n app-v1
+
+                        echo "📈 Applying monitoring configs..."
+                        kubectl apply -f monitoring/prometheus/flaskapp-servicemonitor.yaml -n monitoring
                     '''
                 }
             }
         }
     }
 
+    // --------------------------
+    // POST ACTIONS
+    // --------------------------
     post {
         success {
             echo "✅ Deployment successful!"
