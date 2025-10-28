@@ -1,0 +1,13 @@
+---
+- name: Configure AWS EC2 instance
+  hosts: aws
+  become: yes
+  tasks:
+    - name: Update apt packages
+      apt:
+        update_cache: yes
+
+    - name: Install htop (as a test)
+      apt:
+        name: htop
+        state: present

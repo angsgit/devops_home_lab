@@ -1,0 +1,56 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_REGION = "eu-west-1"
+        AWS_CREDENTIALS = credentials('aws-creds')   // The ID of your AWS creds in Jenkins
+        ANSIBLE_SSH_KEY = credentials('aws-ssh-key') // The ID of your PEM key
+    }
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                git branch: 'master', url: 'https://github.com/angsgit/devops_home_lab.git'
+            }
+        }
+
+        stage('Terraform Init & Apply') {
+            steps {
+                dir('iac/terraform') {
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-creds']]) {
+                        sh '''
+                            terraform init
+                            terraform plan -out=tfplan
+                            terraform apply -auto-approve tfplan
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Configure with Ansible') {
+            steps {
+                dir('iac/ansible') {
+                    withCredentials([sshUserPrivateKey(credentialsId: 'aws-ssh-key', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER')]) {
+                        sh '''
+                            export ANSIBLE_HOST_KEY_CHECKING=False
+                            ansible -i inventory.ini aws -m ping
+                            ansible-playbook -i inventory.ini install_docker.yml
+                            ansible-playbook -i inventory.ini install_kubernetes.yml
+                        '''
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Infrastructure and configuration completed successfully!'
+        }
+        failure {
+            echo '❌ Something went wrong — check the logs.'
+        }
+    }
+}
