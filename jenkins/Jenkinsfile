@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub')        // Docker Hub credentials ID in Jenkins
-        KUBECONFIG_CREDENTIALS = credentials('kubeconfig')       // kubeconfig secret file ID in Jenkins
+        KUBECONFIG_CREDENTIALS = credentials('kubeconfig_aws')       // kubeconfig secret file ID in Jenkins
         IMAGE_NAME = "angsdocker/web-app"                        // Docker image name
         APP_NAME = "webapp"                                      // Deployment name from K8s manifest
         KUBE_DEPLOYMENT = "kubernetes/webappv1.yaml"             // K8s deployment manifest path in repo
