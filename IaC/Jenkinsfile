@@ -160,7 +160,7 @@ pipeline {
             }
             steps {
                 echo "🚀 Triggering application deployment pipeline..."
-                build job: 'App-Deploy-Pipeline', wait: true
+               build job: 'flaskapp-cicd', wait: true   //get app pipeline from jenkins and run
             }
         }
 
