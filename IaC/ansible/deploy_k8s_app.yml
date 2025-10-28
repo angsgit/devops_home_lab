@@ -7,8 +7,8 @@
     namespace: "{{ namespace | default('app-v1') }}"
     image_name: "{{ image_name | default('angsdocker/web-app:latest') }}"
     manifest_dir: /home/ubuntu/kubernetes
+    
   tasks:
-
     - name: Ensure namespace exists
       shell: kubectl get ns {{ namespace }} || kubectl create ns {{ namespace }}
       args:
@@ -19,10 +19,11 @@
         src: "{{ playbook_dir }}/../../kubernetes/"
         dest: "{{ manifest_dir }}"
         owner: ubuntu
-        mode: '0644'
+        mode: "0644"
 
     - name: Update image in manifest
-      shell: sed -i "s|image: .*|image: {{ image_name }}|g" {{ manifest_dir }}/webappv1.yaml
+      shell: >
+        sed -i "s|image: .*|image: {{ image_name }}|g" {{ manifest_dir }}/webappv1.yaml
       args:
         warn: false
 
