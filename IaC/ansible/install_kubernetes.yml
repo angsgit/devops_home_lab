@@ -59,9 +59,10 @@
       shell: |
         cd /tmp/cri-dockerd
         mkdir -p /usr/local/bin
-        make
+        make cri-dockerd
         install -o root -g root -m 0755 cri-dockerd /usr/local/bin/
       args:
+        chdir: /tmp/cri-dockerd
         creates: /usr/local/bin/cri-dockerd
 
     - name: Set up systemd service for cri-dockerd
