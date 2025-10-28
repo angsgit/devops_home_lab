@@ -85,7 +85,7 @@
 
           [Install]
           WantedBy=multi-user.target
-      mode: '0644'
+        mode: '0644'
 
     - name: Set up socket activation for cri-dockerd
       copy:
@@ -103,7 +103,7 @@
 
           [Install]
           WantedBy=sockets.target
-      mode: '0644'
+        mode: '0644'
 
     - name: Enable and start cri-dockerd
       shell: |
