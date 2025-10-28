@@ -17,6 +17,47 @@ pipeline {
 
     stages {
 
+        // --------------------------
+        // TOOL SETUP (Runs only if missing)
+        // --------------------------
+        stage('Setup Tools') {
+            steps {
+                sh '''
+                    echo "🔧 Checking and installing required tools..."
+
+                    # Terraform check and install
+                    if ! command -v terraform >/dev/null 2>&1; then
+                        echo "🚀 Installing Terraform..."
+                        sudo apt update -y && sudo apt install -y unzip wget
+                        wget -q https://releases.hashicorp.com/terraform/1.10.3/terraform_1.10.3_linux_amd64.zip
+                        unzip terraform_1.10.3_linux_amd64.zip
+                        sudo mv terraform /usr/local/bin/
+                        rm -f terraform_1.10.3_linux_amd64.zip
+                        echo "✅ Terraform installed successfully."
+                    else
+                        echo "✅ Terraform already installed: $(terraform -version | head -n 1)"
+                    fi
+
+                    # Ansible check and install
+                    if ! command -v ansible >/dev/null 2>&1; then
+                        echo "🚀 Installing Ansible..."
+                        sudo apt update -y && sudo apt install -y ansible
+                        echo "✅ Ansible installed successfully."
+                    else
+                        echo "✅ Ansible already installed: $(ansible --version | head -n 1)"
+                    fi
+
+                    # Netcat for SSH check
+                    if ! command -v nc >/dev/null 2>&1; then
+                        sudo apt install -y netcat
+                    fi
+                '''
+            }
+        }
+
+        // --------------------------
+        // CHECKOUT CODE
+        // --------------------------
         stage('Checkout Code') {
             steps {
                 git branch: 'master', url: 'https://github.com/angsgit/devops_home_lab.git'
@@ -44,7 +85,7 @@ pipeline {
         }
 
         // --------------------------
-        // WAIT & CONFIGURE (Only if NOT destroying)
+        // WAIT FOR SSH (Only if NOT destroying)
         // --------------------------
         stage('Wait for EC2 SSH Ready') {
             when {
@@ -70,6 +111,9 @@ pipeline {
             }
         }
 
+        // --------------------------
+        // CONFIGURE WITH ANSIBLE (Only if NOT destroying)
+        // --------------------------
         stage('Configure with Ansible') {
             when {
                 expression { return params.DESTROY_INFRA == false }
@@ -92,7 +136,7 @@ pipeline {
         }
 
         // --------------------------
-        // DESTROY (Only if selected)
+        // DESTROY INFRASTRUCTURE
         // --------------------------
         stage('Destroy Infrastructure') {
             when {
