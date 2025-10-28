@@ -47,23 +47,40 @@ pipeline {
         // GENERATE INVENTORY
         // --------------------------
         stage('Generate Inventory') {
-            steps {
-                dir('IaC/ansible') {
-                    sh '''
-                        echo "🔍 Generating Ansible inventory from Terraform outputs..."
-                        echo "[master]" > inventory.ini
-                        echo "$(terraform -chdir=../terraform output -raw master_public_ip) ansible_user=ubuntu ansible_ssh_private_key_file=$ANSIBLE_SSH_KEY" >> inventory.ini
-                        echo "" >> inventory.ini
-                        echo "[workers]" >> inventory.ini
-                        echo "$(terraform -chdir=../terraform output -raw worker1_public_ip) ansible_user=ubuntu ansible_ssh_private_key_file=$ANSIBLE_SSH_KEY" >> inventory.ini
-                        echo "$(terraform -chdir=../terraform output -raw worker2_public_ip) ansible_user=ubuntu ansible_ssh_private_key_file=$ANSIBLE_SSH_KEY" >> inventory.ini
-                        
-                        echo "✅ Inventory created:"
-                        cat inventory.ini
-                    '''
-                }
+        steps {
+            dir('IaC/ansible') {
+                sh '''
+                    echo "📦 Copying Terraform state file from infra pipeline workspace..."
+                    cp /var/lib/jenkins/workspace/IaC-Homelab/IaC/terraform/terraform.tfstate ../terraform/terraform.tfstate || {
+                        echo "❌ ERROR: Could not copy terraform.tfstate from IaC-Homelab workspace."
+                        exit 1
+                    }
+
+                    echo "✅ Copied terraform.tfstate successfully."
+
+                    echo "🔍 Generating Ansible inventory from Terraform outputs..."
+                    MASTER_IP=$(terraform -chdir=../terraform output -raw master_public_ip 2>/dev/null || true)
+                    WORKER1_IP=$(terraform -chdir=../terraform output -raw worker1_public_ip 2>/dev/null || true)
+                    WORKER2_IP=$(terraform -chdir=../terraform output -raw worker2_public_ip 2>/dev/null || true)
+
+                    if [ -z "$MASTER_IP" ]; then
+                        echo "❌ ERROR: master_public_ip is empty — Terraform state or outputs are missing."
+                        exit 1
+                    fi
+
+                    echo "[master]" > inventory.ini
+                    echo "$MASTER_IP ansible_user=ubuntu ansible_ssh_private_key_file=$ANSIBLE_SSH_KEY" >> inventory.ini
+                    echo "" >> inventory.ini
+                    echo "[workers]" >> inventory.ini
+                    [ -n "$WORKER1_IP" ] && echo "$WORKER1_IP ansible_user=ubuntu ansible_ssh_private_key_file=$ANSIBLE_SSH_KEY" >> inventory.ini
+                    [ -n "$WORKER2_IP" ] && echo "$WORKER2_IP ansible_user=ubuntu ansible_ssh_private_key_file=$ANSIBLE_SSH_KEY" >> inventory.ini
+
+                    echo "✅ Inventory created:"
+                    cat inventory.ini
+                '''
             }
-        }
+    }
+    }
 
         // --------------------------
         // DEPLOY APP TO K8S VIA ANSIBLE
