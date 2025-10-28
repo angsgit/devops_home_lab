@@ -52,21 +52,17 @@ pipeline {
                     sh '''
                         echo "🌍 Fetching master IP from Terraform..."
 
-                        # 🧩 Copy real Terraform state file from Jenkins host into cloned repo
+                        # 🧩 Copy Terraform state from Jenkins host into repo workspace
                         cp /home/angs/iac/terraform/terraform.tfstate IaC/terraform/terraform.tfstate || {
                             echo "❌ ERROR: Could not copy terraform.tfstate from Jenkins host."
                             exit 1
                         }
 
-                        # Initialize Terraform without backend reconfig
-                        terraform -chdir=IaC/terraform init -input=false -backend=false >/dev/null
-
-                        # Extract master IP
-                        MASTER_IP=$(terraform -chdir=IaC/terraform output -raw master_public_ip || true)
+                        echo "📦 Using local Terraform state for outputs..."
+                        MASTER_IP=$(terraform -chdir=IaC/terraform output -state=terraform.tfstate -raw master_public_ip || true)
 
                         if [ -z "$MASTER_IP" ]; then
-                            echo "❌ ERROR: Could not fetch master IP from Terraform output."
-                            echo "🧩 Verify terraform.tfstate contains valid outputs."
+                            echo "❌ ERROR: Could not fetch master IP from Terraform state."
                             rm -f IaC/terraform/terraform.tfstate
                             exit 1
                         fi
