@@ -11,7 +11,8 @@
   tasks:
     - name: Ensure namespace exists
       shell: |
-        kubectl get ns {{ namespace_name }} || kubectl create ns {{ namespace_name }}
+        kubectl --kubeconfig /etc/kubernetes/admin.conf get ns {{ namespace_name }} || \
+        kubectl --kubeconfig /etc/kubernetes/admin.conf create ns {{ namespace_name }}
 
     - name: Copy Kubernetes manifests
       copy:
@@ -26,8 +27,16 @@
 
     - name: Apply deployment and service
       shell: |
-        kubectl apply -f {{ manifest_dir }}/webappv1.yaml -n {{ namespace_name }}
+        kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f {{ manifest_dir }}/webappv1.yaml -n {{ namespace_name }}
 
     - name: Wait for rollout
       shell: |
-        kubectl rollout status deployment/{{ app_name }} -n {{ namespace_name }} --timeout=120s
+        kubectl --kubeconfig /etc/kubernetes/admin.conf rollout status deployment/{{ app_name }} -n {{ namespace_name }} --timeout=120s
+
+    - name: Print service info
+      shell: |
+        kubectl --kubeconfig /etc/kubernetes/admin.conf get svc -n {{ namespace_name }}
+      register: svc_info
+
+    - debug:
+        msg: "{{ svc_info.stdout_lines }}"
