@@ -49,12 +49,13 @@ pipeline {
         }
 
 
-    post {
-        success {
-            echo '✅ Infrastructure and configuration completed successfully!'
-        }
-        failure {
-            echo '❌ Something went wrong — check the logs.'
+        post {
+            success {
+                echo '✅ Infrastructure and configuration completed successfully!'
+            }
+            failure {
+                echo '❌ Something went wrong — check the logs.'
+            }
         }
     }
 }
