@@ -1,6 +1,14 @@
 pipeline {
     agent any
 
+    parameters {
+        booleanParam(
+            name: 'DESTROY_INFRA',
+            defaultValue: false,
+            description: 'Check to destroy all infrastructure after configuration'
+        )
+    }
+
     environment {
         AWS_REGION = "eu-west-1"
         AWS_CREDENTIALS = credentials('aws-creds')
@@ -67,11 +75,27 @@ pipeline {
                 }
             }
         }
+
+        stage('Destroy Infrastructure (Optional)') {
+            when {
+                expression { return params.DESTROY_INFRA == true }
+            }
+            steps {
+                dir('IaC/terraform') {
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-creds']]) {
+                        sh '''
+                            echo "🧹 Destroying AWS infrastructure..."
+                            terraform destroy -auto-approve
+                        '''
+                    }
+                }
+            }
+        }
     }
 
     post {
         success {
-            echo '✅ Infrastructure and configuration completed successfully!'
+            echo '✅ Pipeline completed successfully!'
         }
         failure {
             echo '❌ Something went wrong — check the logs.'
