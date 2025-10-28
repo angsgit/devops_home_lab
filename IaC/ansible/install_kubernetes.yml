@@ -42,8 +42,74 @@
           - ca-certificates
           - curl
           - gpg
+          - git
+          - golang-go
+          - make
         state: present
         update_cache: yes
+
+    # --- Install cri-dockerd (Docker runtime for Kubernetes) ---
+    - name: Clone cri-dockerd repo
+      git:
+        repo: https://github.com/Mirantis/cri-dockerd.git
+        dest: /tmp/cri-dockerd
+        version: master
+
+    - name: Build and install cri-dockerd
+      shell: |
+        cd /tmp/cri-dockerd
+        mkdir -p /usr/local/bin
+        make
+        install -o root -g root -m 0755 cri-dockerd /usr/local/bin/
+      args:
+        creates: /usr/local/bin/cri-dockerd
+
+    - name: Set up systemd service for cri-dockerd
+      copy:
+        dest: /etc/systemd/system/cri-docker.service
+        content: |
+          [Unit]
+          Description=CRI Interface for Docker Application Container Engine
+          Documentation=https://docs.mirantis.com
+          After=network-online.target firewalld.service docker.service
+          Wants=network-online.target
+          Requires=docker.socket
+
+          [Service]
+          Type=notify
+          ExecStart=/usr/local/bin/cri-dockerd --container-runtime-endpoint fd://
+          ExecReload=/bin/kill -s HUP $MAINPID
+          Restart=always
+          RestartSec=10s
+          TimeoutStartSec=0
+
+          [Install]
+          WantedBy=multi-user.target
+      mode: '0644'
+
+    - name: Set up socket activation for cri-dockerd
+      copy:
+        dest: /etc/systemd/system/cri-docker.socket
+        content: |
+          [Unit]
+          Description=CRI Docker Socket for the API
+          PartOf=cri-docker.service
+
+          [Socket]
+          ListenStream=/var/run/cri-dockerd.sock
+          SocketMode=0660
+          SocketUser=root
+          SocketGroup=docker
+
+          [Install]
+          WantedBy=sockets.target
+      mode: '0644'
+
+    - name: Enable and start cri-dockerd
+      shell: |
+        systemctl daemon-reload
+        systemctl enable cri-docker.service
+        systemctl enable --now cri-docker.socket
 
     - name: Add Kubernetes apt key (modern method)
       shell: |
@@ -60,7 +126,6 @@
     - name: Update apt cache after adding Kubernetes repo
       apt:
         update_cache: yes
-    # 👆 ensures apt knows about the new repo
 
     - name: Install kubelet, kubeadm, and kubectl
       apt:
@@ -85,7 +150,7 @@
       ignore_errors: true
 
     - name: Verify kubectl installation
-      command: kubectl version --client --short
+      command: kubectl version --client
       register: kubectl_version
       ignore_errors: true
 
@@ -101,7 +166,7 @@
   become: yes
   tasks:
     - name: Initialize Kubernetes master
-      command: kubeadm init --pod-network-cidr=10.244.0.0/16
+      command: kubeadm init --pod-network-cidr=10.244.0.0/16 --cri-socket unix:///var/run/cri-dockerd.sock
       register: kubeadm_init
       args:
         creates: /etc/kubernetes/admin.conf
@@ -115,8 +180,7 @@
         mode: '0755'
 
     - name: Copy kubeconfig to ubuntu user
-      command: >
-        cp /etc/kubernetes/admin.conf /home/ubuntu/.kube/config
+      command: cp /etc/kubernetes/admin.conf /home/ubuntu/.kube/config
       args:
         creates: /home/ubuntu/.kube/config
 
@@ -149,6 +213,7 @@
         dest: /tmp/join-command.sh
         flat: yes
 
+
 # --- Join Worker Nodes ---
 - hosts: workers
   become: yes
@@ -163,4 +228,3 @@
       command: sh /tmp/join-command.sh
       args:
         creates: /etc/kubernetes/kubelet.conf
-
