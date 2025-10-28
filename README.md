@@ -262,7 +262,7 @@ project/
 │  
 ├── k8s/                           # Kubernetes manifests and Helm resources
 │   ├── webappv1.yaml              # Deployment, Service, and Ingress for the Flask app
-│   ├── namespace.yaml             # Custom namespace definition (e.g., app-v1)
+│   ├── namespace.yaml             # Custom namespace definition (e.g. app-v1)
 │   ├── helm/                      # Helm charts for monitoring stack
 │   │   └── 
 │ 
@@ -304,7 +304,7 @@ project/
 
 ## 🔒 Security
 
-All sensitive credentials and configuration files (e.g., Docker Hub tokens, kubeconfig, Grafana admin passwords) are **not stored in this repository**.  
+All sensitive credentials and configuration files (e.g. Docker Hub tokens, kubeconfig, Grafana admin passwords) are **not stored in this repository**.  
 They are securely managed using **Jenkins Credentials**, **Kubernetes Secrets**, or **local environment variables**.
 
 This project follows **DevSecOps best practices**, ensuring:
