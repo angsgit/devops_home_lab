@@ -33,15 +33,18 @@
       shell: |
         kubectl --kubeconfig /etc/kubernetes/admin.conf rollout status deployment/{{ app_name }} -n {{ namespace_name }} --timeout=120s
 
-    - name: Print service info
+    - name: Print service NodePort
       shell: |
         kubectl --kubeconfig /etc/kubernetes/admin.conf get svc {{ app_name }} -n {{ namespace_name }} -o jsonpath='{.spec.ports[0].nodePort}'
       register: nodeport
+      failed_when: nodeport.stdout == ""
 
-    - name: Get worker node IP
+    - name: Get any worker node public IP (fallback-safe)
       shell: |
-        kubectl --kubeconfig /etc/kubernetes/admin.conf get nodes -o wide | grep worker | awk '{print $6}' | head -n1
+        kubectl --kubeconfig /etc/kubernetes/admin.conf get nodes -o wide | awk 'NR>1 {print $6; exit}'
       register: worker_ip
+      failed_when: worker_ip.stdout == ""
 
     - debug:
         msg: "🌐 Access your app at: http://{{ worker_ip.stdout }}:{{ nodeport.stdout }}"
+
