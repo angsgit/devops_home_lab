@@ -59,12 +59,7 @@
         update_cache: yes
 
     - name: Hold Kubernetes packages at current version
-      apt:
-        name:
-          - kubelet
-          - kubeadm
-          - kubectl
-        state: hold
+      command: apt-mark hold kubelet kubeadm kubectl
 
     - name: Enable and start kubelet service
       service:
