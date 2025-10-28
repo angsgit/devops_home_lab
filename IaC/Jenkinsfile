@@ -17,7 +17,7 @@ pipeline {
 
         stage('Terraform Init & Apply') {
             steps {
-                dir('iac/terraform') {
+                dir('IaC/terraform') {
                     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-creds']]) {
                         sh '''
                             terraform init
