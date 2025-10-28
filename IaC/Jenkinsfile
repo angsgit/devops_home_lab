@@ -113,7 +113,6 @@ pipeline {
             }
         }
 
-
         // --------------------------
         // CONFIGURE WITH ANSIBLE (Only if NOT destroying)
         // --------------------------
@@ -129,11 +128,14 @@ pipeline {
 
                             echo "🔍 Generating dynamic Ansible inventory..."
                             echo "[master]" > inventory.ini
-                            terraform -chdir=../terraform output -raw master_public_ip >> inventory.ini
+                            echo "$(terraform -chdir=../terraform output -raw master_public_ip) ansible_user=ubuntu ansible_ssh_private_key_file=$SSH_KEY" >> inventory.ini
                             echo "" >> inventory.ini
                             echo "[workers]" >> inventory.ini
-                            terraform -chdir=../terraform output -raw worker1_public_ip >> inventory.ini
-                            terraform -chdir=../terraform output -raw worker2_public_ip >> inventory.ini
+                            echo "$(terraform -chdir=../terraform output -raw worker1_public_ip) ansible_user=ubuntu ansible_ssh_private_key_file=$SSH_KEY" >> inventory.ini
+                            echo "$(terraform -chdir=../terraform output -raw worker2_public_ip) ansible_user=ubuntu ansible_ssh_private_key_file=$SSH_KEY" >> inventory.ini
+
+                            echo "🧾 Generated inventory:"
+                            cat inventory.ini
 
                             echo "🔍 Testing connectivity with Ansible ping..."
                             ansible -i inventory.ini all -m ping
@@ -146,8 +148,6 @@ pipeline {
                 }
             }
         }
-
-
 
         // --------------------------
         // DESTROY INFRASTRUCTURE
@@ -168,19 +168,19 @@ pipeline {
             }
         }
 
+        // --------------------------
+        // TRIGGER APP PIPELINE
+        // --------------------------
         stage('Trigger App Deployment') {
             when {
                 expression { return params.DESTROY_INFRA == false }
             }
             steps {
                 echo "🚀 Triggering application deployment pipeline..."
-               build job: 'flaskapp-cicd', wait: true   //get app pipeline from jenkins and run
+                build job: 'flaskapp-cicd', wait: true
             }
         }
-
-    }   // stages close
-
-    
+    }
 
     post {
         success {
