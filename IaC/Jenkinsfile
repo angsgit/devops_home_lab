@@ -85,7 +85,7 @@ pipeline {
         }
 
         // --------------------------
-        // WAIT FOR SSH (Only if NOT destroying)
+        // WAIT FOR EC2 SSH READY (Only if NOT destroying)
         // --------------------------
         stage('Wait for EC2 SSH Ready') {
             when {
@@ -94,22 +94,25 @@ pipeline {
             steps {
                 dir('IaC/ansible') {
                     sh '''
-                        IP=$(cat host_ip.txt)
-                        echo "⏳ Waiting for EC2 ($IP) SSH to become available..."
-                        for i in {1..40}; do
-                            if nc -zv $IP 22 >/dev/null 2>&1; then
-                                echo "✅ SSH is ready!"
-                                exit 0
-                            fi
-                            echo "Still waiting... ($i)"
-                            sleep 10
+                        echo "⏳ Waiting for EC2 instances to become SSH-ready..."
+                        
+                        # Read all IPs from Terraform output JSON
+                        jq -r '. | to_entries[] | .value.value' ../terraform/hosts.json | while read ip; do
+                            echo "Checking SSH for $ip ..."
+                            for i in {1..30}; do
+                                if nc -zv $ip 22 >/dev/null 2>&1; then
+                                    echo "✅ $ip SSH is ready!"
+                                    break
+                                fi
+                                echo "Still waiting for $ip ... ($i)"
+                                sleep 10
+                            done
                         done
-                        echo "❌ Timeout waiting for SSH on $IP"
-                        exit 1
                     '''
                 }
             }
         }
+
 
 
 
