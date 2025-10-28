@@ -1,6 +1,6 @@
 ---
 - name: Install Kubernetes components on AWS EC2
-  hosts: aws
+  hosts: all
   become: yes
   tasks:
 
