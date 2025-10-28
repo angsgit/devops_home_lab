@@ -25,7 +25,7 @@
       shell: |
         sed -i "s|image: .*|image: {{ image_name }}|g" {{ manifest_dir }}/webappv1.yaml
 
-    - name: Apply deployment and service
+    - name: Apply deployment, service, and ingress
       shell: |
         kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f {{ manifest_dir }}/webappv1.yaml -n {{ namespace_name }}
 
@@ -33,18 +33,21 @@
       shell: |
         kubectl --kubeconfig /etc/kubernetes/admin.conf rollout status deployment/{{ app_name }} -n {{ namespace_name }} --timeout=120s
 
-    - name: Get NodePort of service
+    - name: Wait for Ingress to get hostname
       shell: |
-        kubectl --kubeconfig /etc/kubernetes/admin.conf get svc {{ app_name }} -n {{ namespace_name }} -o jsonpath='{.spec.ports[0].nodePort}'
-      register: nodeport
-      failed_when: nodeport.stdout == ""
-
-    - name: Get first worker node internal IP
-      shell: |
-        kubectl --kubeconfig /etc/kubernetes/admin.conf get nodes -o wide | awk 'NR>1 {print $6; exit}'
-      register: worker_ip
-      failed_when: worker_ip.stdout == ""
+        for i in {1..30}; do
+          host=$(kubectl --kubeconfig /etc/kubernetes/admin.conf get ingress {{ app_name }} -n {{ namespace_name }} -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' 2>/dev/null)
+          if [ -n "$host" ]; then echo $host; exit 0; fi
+          echo "Waiting for Ingress hostname... ($i/30)"
+          sleep 5
+        done
+        exit 1
+      register: ingress_host
+      retries: 5
+      delay: 5
+      ignore_errors: true
 
     - debug:
-        msg: "🌐 Access your app at: http://{{ worker_ip.stdout }}:{{ nodeport.stdout }}"
-        
+        msg: >
+          🌐 Access your app via Ingress at:
+          http://{{ ingress_host.stdout | default('Ingress hostname not yet available') }}
