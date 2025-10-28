@@ -5,7 +5,7 @@ pipeline {
         booleanParam(
             name: 'DESTROY_INFRA',
             defaultValue: false,
-            description: 'Check to destroy all infrastructure after configuration'
+            description: 'Check to destroy all infrastructure instead of creating it'
         )
     }
 
@@ -23,7 +23,13 @@ pipeline {
             }
         }
 
+        // --------------------------
+        // TERRAFORM APPLY (Only if NOT destroying)
+        // --------------------------
         stage('Terraform Init & Apply') {
+            when {
+                expression { return params.DESTROY_INFRA == false }
+            }
             steps {
                 dir('IaC/terraform') {
                     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-creds']]) {
@@ -37,7 +43,13 @@ pipeline {
             }
         }
 
+        // --------------------------
+        // WAIT & CONFIGURE (Only if NOT destroying)
+        // --------------------------
         stage('Wait for EC2 SSH Ready') {
+            when {
+                expression { return params.DESTROY_INFRA == false }
+            }
             steps {
                 dir('IaC/ansible') {
                     sh '''
@@ -59,6 +71,9 @@ pipeline {
         }
 
         stage('Configure with Ansible') {
+            when {
+                expression { return params.DESTROY_INFRA == false }
+            }
             steps {
                 dir('IaC/ansible') {
                     withCredentials([sshUserPrivateKey(credentialsId: 'aws-ssh-key', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER')]) {
@@ -76,7 +91,10 @@ pipeline {
             }
         }
 
-        stage('Destroy Infrastructure (Optional)') {
+        // --------------------------
+        // DESTROY (Only if selected)
+        // --------------------------
+        stage('Destroy Infrastructure') {
             when {
                 expression { return params.DESTROY_INFRA == true }
             }
