@@ -49,26 +49,60 @@ resource "aws_route_table_association" "main_rta" {
   route_table_id = aws_route_table.main_rtb.id
 }
 
-# --- Create a Security Group ---
+
+# --- Create a Security Group for K8s Cluster ---
+
 resource "aws_security_group" "main_sg" {
-  name        = "terraform-sg"
-  description = "Allow SSH and HTTP"
+  name        = "k8s-cluster-sg"
+  description = "Allow Kubernetes cluster communication + SSH + HTTP"
   vpc_id      = aws_vpc.main.id
 
+  # --- Allow SSH from anywhere (for simplicity) ---
   ingress {
+    description = "SSH"
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  # --- Allow HTTP traffic for app access ---
   ingress {
+    description = "HTTP"
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  # --- Allow K8s API Server (kubectl access) ---
+  ingress {
+    description = "Kubernetes API Server"
+    from_port   = 6443
+    to_port     = 6443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # --- Allow K8s node-to-node communication (intra-cluster) ---
+  ingress {
+    description = "Kubernetes node communication"
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # --- Allow pods & services (K8s internal networking) ---
+  ingress {
+    description = "Kubernetes pods & services"
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "udp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # --- Allow all outbound traffic ---
   egress {
     from_port   = 0
     to_port     = 0
@@ -77,20 +111,52 @@ resource "aws_security_group" "main_sg" {
   }
 
   tags = {
-    Name = "terraform-sg"
+    Name = "k8s-cluster-sg"
   }
 }
 
-# --- Create EC2 Instance ---
-resource "aws_instance" "test_vm" {
-  ami           = "ami-0bc691261a82b32bc" # Ubuntu 22.04 LTS (eu-west-1)
-  instance_type = "t2.micro"
-  key_name      = "angs-key"
 
+# --- CREATE K8S CLUSTER ---
+
+# --- Kubernetes Control Plane Node ---
+resource "aws_instance" "k8s_master" {
+  ami                    = "ami-0bc691261a82b32bc" # Ubuntu 22.04 LTS (eu-west-1)
+  instance_type          = "t3.medium"
+  key_name               = "angs-key"
   subnet_id              = aws_subnet.main_subnet.id
   vpc_security_group_ids = [aws_security_group.main_sg.id]
 
   tags = {
-    Name = "terraform-test-vm"
+    Name = "aws-k8s-master"
+    Role = "master"
   }
 }
+
+# --- Kubernetes Worker Node 1 ---
+resource "aws_instance" "k8s_worker1" {
+  ami                    = "ami-0bc691261a82b32bc"
+  instance_type          = "t3.medium"
+  key_name               = "angs-key"
+  subnet_id              = aws_subnet.main_subnet.id
+  vpc_security_group_ids = [aws_security_group.main_sg.id]
+
+  tags = {
+    Name = "aws-k8s-worker1"
+    Role = "worker"
+  }
+}
+
+# --- Kubernetes Worker Node 2 ---
+resource "aws_instance" "k8s_worker2" {
+  ami                    = "ami-0bc691261a82b32bc"
+  instance_type          = "t3.medium"
+  key_name               = "angs-key"
+  subnet_id              = aws_subnet.main_subnet.id
+  vpc_security_group_ids = [aws_security_group.main_sg.id]
+
+  tags = {
+    Name = "aws-k8s-worker2"
+    Role = "worker"
+  }
+}
+
