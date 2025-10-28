@@ -1,0 +1,81 @@
+---
+- name: Install Kubernetes components on AWS EC2
+  hosts: aws
+  become: yes
+  tasks:
+    - name: Disable swap (required for Kubernetes)
+      command: swapoff -a
+      when: ansible_swaptotal_mb > 0
+
+    - name: Ensure swap is disabled permanently
+      replace:
+        path: /etc/fstab
+        regexp: "(^.*swap.*$)"
+        replace: '# \1'
+
+    - name: Load required kernel modules
+      shell: |
+        modprobe overlay
+        modprobe br_netfilter
+
+    - name: Set up sysctl params for Kubernetes networking
+      copy:
+        dest: /etc/sysctl.d/kubernetes.conf
+        content: |
+          net.bridge.bridge-nf-call-ip6tables = 1
+          net.bridge.bridge-nf-call-iptables = 1
+          net.ipv4.ip_forward = 1
+
+    - name: Apply sysctl params
+      command: sysctl --system
+
+    - name: Install dependencies
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+        state: present
+        update_cache: yes
+
+    - name: Add Google Cloud public signing key
+      apt_key:
+        url: https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key
+        state: present
+
+    - name: Add Kubernetes APT repository
+      apt_repository:
+        repo: deb https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /
+        state: present
+        filename: kubernetes
+
+    - name: Install kubelet, kubeadm, and kubectl
+      apt:
+        name:
+          - kubelet
+          - kubeadm
+          - kubectl
+        state: present
+        update_cache: yes
+
+    - name: Hold Kubernetes packages at current version
+      apt:
+        name:
+          - kubelet
+          - kubeadm
+          - kubectl
+        state: hold
+
+    - name: Enable and start kubelet service
+      service:
+        name: kubelet
+        enabled: yes
+        state: started
+
+    - name: Verify kubeadm installation
+      command: kubeadm version -o short
+      register: kubeadm_version
+
+    - name: Print kubeadm version
+      debug:
+        var: kubeadm_version.stdout
