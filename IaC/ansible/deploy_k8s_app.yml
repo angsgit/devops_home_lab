@@ -35,8 +35,13 @@
 
     - name: Print service info
       shell: |
-        kubectl --kubeconfig /etc/kubernetes/admin.conf get svc -n {{ namespace_name }}
-      register: svc_info
+        kubectl --kubeconfig /etc/kubernetes/admin.conf get svc {{ app_name }} -n {{ namespace_name }} -o jsonpath='{.spec.ports[0].nodePort}'
+      register: nodeport
+
+    - name: Get worker node IP
+      shell: |
+        kubectl --kubeconfig /etc/kubernetes/admin.conf get nodes -o wide | grep worker | awk '{print $6}' | head -n1
+      register: worker_ip
 
     - debug:
-        msg: "{{ svc_info.stdout_lines }}"
+        msg: "🌐 Access your app at: http://{{ worker_ip.stdout }}:{{ nodeport.stdout }}"

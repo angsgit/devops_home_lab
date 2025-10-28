@@ -2,10 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: webapp
-  labels:
-    app: webapp
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: webapp
@@ -16,26 +14,14 @@ spec:
     spec:
       containers:
         - name: webapp
-          image: angsdocker/web-app:latest # ✅ will be replaced by Ansible
+          image: angsdocker/web-app:latest
           ports:
             - containerPort: 5000
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 5000
-            initialDelaySeconds: 10
-            periodSeconds: 5
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 5000
-            initialDelaySeconds: 30
-            periodSeconds: 10
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: webapp-service
+  name: webapp
 spec:
   type: NodePort
   selector:
