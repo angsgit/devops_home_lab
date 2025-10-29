@@ -76,15 +76,15 @@ This setup represents a **real-world DevOps pipeline** — from code commit to d
         ┌─────────────────────┐
         │     Docker Hub      │
         │ (Container Images)  │
-        └────────┬────────────┘
-                   │
-                   ▼
+        └──────── ┬────────────┘
+                  │
+                  ▼
         ┌─────────────────────┐
         │   Kubernetes (K8s)  │
         │  (App Deployment)   │
         └────────┬────────────┘
-                │
-                ▼
+                 │
+                 ▼
         ┌─────────────────────┐
         │   Prometheus +      │
         │     Grafana         │
