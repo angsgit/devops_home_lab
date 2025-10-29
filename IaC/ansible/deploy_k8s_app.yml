@@ -9,6 +9,25 @@
     manifest_dir: /home/ubuntu/kubernetes
 
   tasks:
+    - name: Check if Ingress NGINX namespace exists
+      shell: kubectl get ns ingress-nginx --kubeconfig /etc/kubernetes/admin.conf || true
+      register: ingress_ns
+      changed_when: false
+
+    - name: Install NGINX ingress controller if missing
+      shell: |
+        kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml --kubeconfig /etc/kubernetes/admin.conf
+      when: '"ingress-nginx" not in ingress_ns.stdout'
+
+    - name: Wait for ingress controller pods to be ready
+      shell: |
+        kubectl wait --namespace ingress-nginx \
+          --for=condition=ready pod \
+          --selector=app.kubernetes.io/component=controller \
+          --timeout=180s \
+          --kubeconfig /etc/kubernetes/admin.conf
+      when: '"ingress-nginx" not in ingress_ns.stdout'
+
     - name: Ensure namespace exists
       shell: |
         kubectl --kubeconfig /etc/kubernetes/admin.conf get ns {{ namespace_name }} || \
@@ -25,7 +44,7 @@
       shell: |
         sed -i "s|image: .*|image: {{ image_name }}|g" {{ manifest_dir }}/webappv1.yaml
 
-    - name: Apply deployment, service, and ingress
+    - name: Apply deployment and service
       shell: |
         kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f {{ manifest_dir }}/webappv1.yaml -n {{ namespace_name }}
 
@@ -33,20 +52,23 @@
       shell: |
         kubectl --kubeconfig /etc/kubernetes/admin.conf rollout status deployment/{{ app_name }} -n {{ namespace_name }} --timeout=120s
 
-    - name: Get Ingress host
+    - name: Wait for ingress controller service to get external IP
       shell: |
-        kubectl --kubeconfig /etc/kubernetes/admin.conf get ingress {{ app_name }} -n {{ namespace_name }} -o jsonpath='{.spec.rules[0].host}'
-      register: ingress_host
+        for i in {1..30}; do
+          ip=$(kubectl get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}' 2>/dev/null)
+          host=$(kubectl get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' 2>/dev/null)
+          if [ -n "$ip" ] || [ -n "$host" ]; then
+            echo "${ip:-$host}"
+            exit 0
+          fi
+          echo "Waiting for ingress external address... ($i/30)"
+          sleep 10
+        done
+        exit 1
+      register: ingress_address
+      retries: 5
+      delay: 10
       ignore_errors: true
 
-    - name: Get first external node IP (any role)
-      shell: |
-        kubectl --kubeconfig /etc/kubernetes/admin.conf get nodes -o wide | awk 'NR>1 {print $6; exit}'
-      register: worker_ip
-
-
-    - debug:
-        msg: >
-          🌐 Access your app at:
-          http://{{ worker_ip.stdout }}/
-          (Ingress Host: {{ ingress_host.stdout | default('homelab') }})
+    - name: debug
+      msg: "🌐 Access your app at: http://{{ ingress_address.stdout | default('pending') }}/ (Ingress Host: homelab)"
