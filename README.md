@@ -40,7 +40,7 @@ In future phases, the architecture will expand to include **multi-zone / multi-r
 This setup represents a **real-world DevOps pipeline** — from code commit to deployment and monitoring — running entirely inside a **AWS Kubernetes cluster**.
 
 
-<pre> ```text ┌────────────────┐
+<pre> ```text   ┌────────────────┐
            │   Developer    │
            │   (Git Push)   │
            └──────┬─────────┘
