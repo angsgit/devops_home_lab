@@ -9,25 +9,6 @@
     manifest_dir: /home/ubuntu/kubernetes
 
   tasks:
-    - name: Check if Ingress NGINX namespace exists
-      shell: kubectl get ns ingress-nginx --kubeconfig /etc/kubernetes/admin.conf || true
-      register: ingress_ns
-      changed_when: false
-
-    - name: Install NGINX ingress controller if missing
-      shell: |
-        kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml --kubeconfig /etc/kubernetes/admin.conf
-      when: '"ingress-nginx" not in ingress_ns.stdout'
-
-    - name: Wait for ingress controller pods to be ready
-      shell: |
-        kubectl wait --namespace ingress-nginx \
-          --for=condition=ready pod \
-          --selector=app.kubernetes.io/component=controller \
-          --timeout=180s \
-          --kubeconfig /etc/kubernetes/admin.conf
-      when: '"ingress-nginx" not in ingress_ns.stdout'
-
     - name: Ensure namespace exists
       shell: |
         kubectl --kubeconfig /etc/kubernetes/admin.conf get ns {{ namespace_name }} || \
@@ -52,24 +33,25 @@
       shell: |
         kubectl --kubeconfig /etc/kubernetes/admin.conf rollout status deployment/{{ app_name }} -n {{ namespace_name }} --timeout=120s
 
-    - name: Wait for ingress controller service to get external IP
+    # ✅ Get Ingress Controller NodePort instead of waiting for external IP
+    - name: Get NodePort of ingress controller
       shell: |
-        for i in {1..30}; do
-          ip=$(kubectl get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}' 2>/dev/null)
-          host=$(kubectl get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' 2>/dev/null)
-          if [ -n "$ip" ] || [ -n "$host" ]; then
-            echo "${ip:-$host}"
-            exit 0
-          fi
-          echo "Waiting for ingress external address... ($i/30)"
-          sleep 10
-        done
-        exit 1
-      register: ingress_address
-      retries: 5
-      delay: 10
+        kubectl --kubeconfig /etc/kubernetes/admin.conf get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.spec.ports[?(@.port==80)].nodePort}'
+      register: ingress_nodeport
+
+    - name: Get public worker IP
+      shell: |
+        kubectl --kubeconfig /etc/kubernetes/admin.conf get nodes -o wide | grep worker | awk '{print $6}' | head -n1
+      register: worker_ip
+
+    - name: Get ingress hostname (if defined)
+      shell: |
+        kubectl --kubeconfig /etc/kubernetes/admin.conf get ingress webapp -n {{ namespace_name }} -o jsonpath='{.spec.rules[0].host}'
+      register: ingress_host
       ignore_errors: true
 
     - name: Show final access URL
       debug:
-        msg: "🌐 Access your app at: http://{{ ingress_address.stdout | default('pending') }}/ (Ingress Host: homelab)"
+        msg: |
+          🌐 Access your app at: http://{{ worker_ip.stdout }}:{{ ingress_nodeport.stdout }}/ 
+          (Ingress Host: {{ ingress_host.stdout | default('none') }})
