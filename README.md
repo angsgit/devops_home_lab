@@ -80,7 +80,7 @@ This setup represents a **real-world DevOps pipeline** — from code commit to d
         │ (Monitoring Stack)  │
         └─────────────────────┘
 
-
+![DEPLOYED APP](documentation/screenshots/diagram.png)
 ---
 
 
