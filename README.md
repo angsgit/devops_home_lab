@@ -252,14 +252,103 @@ pipeline {
 
 ---
 
-## ☁️ Phase 5 - Disaster Recovery (DR)
+## ☁️ Phase 6 - Disaster Recovery (DR)
 
 To ensure high availability and resilience, a Disaster Recovery (DR) strategy was integrated into the AWS DevOps pipeline.  
 All components — infrastructure, configuration, and applications — are reproducible using Infrastructure as Code (IaC).
 
+---
 
+### 🧩 Multi-Region Infrastructure-as-Code
 
+- The Terraform configuration supports **multi-region deployment** by parameterizing the AWS region.
+- Jenkins can deploy to either the **primary** or **secondary (DR)** AWS region.
 
+### We create two workspaces or two Jenkins pipeline parameters:
+
+#### Primary region: eu-west-1
+#### DR region: eu-central-1
+
+variable "aws_region" {
+  default = "eu-west-1"  # Primary region
+}
+
+provider "aws" {
+  region = var.aws_region
+}
+
+- Deploy to the DR region:
+terraform apply -var="aws_region=eu-central-1"
+
+#### This way, you can spin up an identical Kubernetes cluster in another AWS region on demand.
+
+---
+### 🪄 Automated Backup & Restore
+
+For application and configuration state:
+
+- Use Velero in Kubernetes:
+
+- Backs up namespaces, deployments, and services to S3.
+- Can restore them in another region or clusster.
+
+  velero backup create full-cluster-backup --include-namespaces app-v1
+  velero restore create --from-backup full-cluster-backup
+
+- For persistent data (if using databases, volumes, etc.):
+    - Use EBS snapshots or AWS Backup.
+    - Replicate snapshots to another region automatically using AWS Backup policies.
+---
+
+### 📦 Docker Image Redundancy
+
+- Push images to Amazon ECR (Elastic Container Registry) or Docker Hub.
+- Enable cross-region replication in ECR:
+    - Ensures container images are available in both primary and DR regions instantly.
+---
+
+### 🔁 Jenkins Multi-Region DR Automation
+
+  - Add a parameter in Jenkins:
+
+    parameters {
+        choice(name: 'AWS_REGION', choices: ['eu-west-1', 'eu-central-1'], description: 'Select region to deploy infrastructure')
+    }
+
+  - Run the same pipeline to deploy infra and apps to your DR region.
+  - Optionally, schedule weekly DR rehearsals (using Jenkins cron triggers).
+
+---
+
+###  🌐 DNS-Level Failover (Route 53)
+
+- Use Route 53 failover routing:
+
+- Primary cluster: health-checked endpoint.
+
+  DR cluster: secondary endpoint (activated automatically if primary fails).
+
+  Example:
+  app.mydomain.com
+  ├── Primary → eu-west-1 load balancer
+  └── Secondary → eu-central-1 load balancer
+
+###  📊 Monitoring & Alerts
+
+  - Use Prometheus + Grafana stack to monitor both regions.
+  - Add AWS CloudWatch alarms:
+  - Detect EC2 instance/ELB/Kubernetes API unavailability.
+  - Trigger Jenkins or Lambda for auto-failover deployment.
+
+###  ✅ DR Summary
+  - Component	DR Strategy
+  - Infrastructure	Terraform deploys to secondary region
+  - Kubernetes state	Velero backups to S3
+  - App data	EBS snapshot replication
+  - Docker images	ECR cross-region replication
+  - DNS failover	Route 53 health checks
+  - CI/CD continuity	Jenkins parameterized multi-region deploy
+  - Monitoring	Prometheus + Grafana + CloudWatch
 
 
 ## 🧠 Key Learnings
@@ -274,14 +363,12 @@ All components — infrastructure, configuration, and applications — are repro
 
 ---
 
-
 ## 🗺️ Next Steps (Planned)
 
 - Integrate Alertmanager notifications (Slack or email) 
 - Deploy to a cloud-managed Kubernetes cluster (EKS / AKS)
 
 ---
-
 
 ## 📂 Repository Structure
 
@@ -342,7 +429,6 @@ project/
 
 ---
 
-
 ## 🔒 Security
 
 All sensitive credentials and configuration files (e.g. Docker Hub tokens, kubeconfig, Grafana admin passwords) are **not stored in this repository**.  
@@ -355,7 +441,6 @@ This project follows **DevSecOps best practices**, ensuring:
 - Public documentation and manifests contain only non-sensitive example values.
 
 ---
-
 
 ---
 
