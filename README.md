@@ -253,58 +253,55 @@ pipeline {
 ```
 .
 project/
-|
-|
-├── README.md                      # Full project documentation and setup guide
-├── .gitignore                     # Ignore unnecessary files (logs, creds, etc.)
 │
-|
-├── app/                           # Flask application source code
-│   ├── main.py                    # Flask entry point
-│   ├── requirements.txt           # Python dependencies
-│   ├── Dockerfile                 # Container build instructions
-│ 
+├── README.md                           # Full project documentation and setup guide
+├── .gitignore                          # Ignore unnecessary files (logs, creds, etc.)
 │
-├── jenkins/                       # Jenkins CI/CD pipeline configuration
-│   ├── Jenkinsfile                # Pipeline for build → push → deploy to K8s
-│   
-│  
-├── k8s/                           # Kubernetes manifests and Helm resources
-│   ├── webappv1.yaml              # Deployment, Service, and Ingress for the Flask app
-│   ├── namespace.yaml             # Custom namespace definition (e.g. app-v1)
-│   ├── helm/                      # Helm charts for monitoring stack
-│   │   └── 
-│ 
+├── app/                                # Flask application source code
+│   ├── main.py                         # Flask entry point
+│   ├── requirements.txt                # Python dependencies
+│   ├── Dockerfile                      # Container build instructions
 │
-├── monitoring/                    # Monitoring stack (Helm-based)
-│   ├── prometheus/                # Prometheus custom configs
-│   │   └── .gitkeep
-│   ├── grafana/                   # Grafana dashboards and custom configs
-│   │   ├── dashboards/
-│   │   │   ├── 
-│   │   │   └── 
+├── IaC/                                # Infrastructure as Code (Terraform + Ansible)
+│   ├── terraform/                      # Terraform for AWS infrastructure
+│   │   ├── main.tf                     # EC2 instances, security groups, networking
+│   │   ├── variables.tf                # Input variables
+│   │   ├── outputs.tf                  # Exported IPs for Ansible inventory
+│   │   ├── provider.tf                 # AWS provider and backend configuration
+│   │   └── terraform.tfstate           # Terraform state file (generated)
 │   │
+│   ├── ansible/                        # Ansible playbooks for configuration & deployment
+│   │   ├── install_kubernetes.yml      # Installs Kubernetes on AWS EC2 instances
+│   │   ├── deploy_k8s_app.yml          # Deploys Flask app to Kubernetes cluster
+│   │   ├── inventory.ini               # Dynamic inventory generated from Terraform outputs
+│   │   └── roles/                      # (Optional) Future modularization for Ansible roles
+│   │
+│   └── Jenkinsfile-infra               # Jenkins pipeline for provisioning & setup
 │
-|
-├── terraform/                     # Infrastructure as Code (IaC)
-│   ├──                     
-|
-|
-├── ansible/                       # Config Automation
-│   ├── playbooks/
-│   │   ├── 
-│   │   └──
-│   └── 
+├── jenkins/                            # Jenkins CI/CD pipeline configuration
+│   ├── Jenkinsfile-app-deploy          # Pipeline for build → push → deploy (App)
 │
-|
-└── documentation/                          # Documentation and screenshots
-    ├── architecture_diagram.png   # Overview of Jenkins → DockerHub → K8s pipeline
-    ├── screenshots/               # Grafana, Jenkins UI, Flask App
-    │   ├── 
-    │   ├── 
-    │   ├── 
-    │   └── 
-    └── 
+├── k8s/                                # Kubernetes manifests and Helm resources
+│   ├── webappv1.yaml                   # Deployment, Service, and Ingress for the Flask app
+│   ├── namespace.yaml                  # Custom namespace definition (e.g. app-v1)
+│   ├── helm/                           # Helm charts for monitoring stack
+│   │   ├── prometheus/
+│   │   └── grafana/
+│
+├── monitoring/                         # Monitoring stack (Helm-based)
+│   ├── prometheus/                     # Prometheus custom configurations
+│   ├── grafana/                        # Grafana dashboards and custom configs
+│   │   ├── dashboards/
+│   │   └── datasources/
+│
+└── documentation/                      # Documentation and visuals
+    ├── architecture_diagram.png        # Jenkins → Terraform → Ansible → K8s pipeline
+    ├── screenshots/                    # Grafana dashboards, Jenkins UI, Flask app views
+    │   ├── grafana-dashboard.png
+    │   ├── jenkins-pipeline.png
+    │   └── flask-app.png
+    └── notes.md                        # Summary notes, troubleshooting logs, future plans
+
 
 ```
 
