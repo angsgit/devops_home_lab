@@ -229,21 +229,20 @@ pipeline {
 
 ## 🧠 Key Learnings
 
-- Full DevOps pipeline integration from code to Kubernetes
-- Automating deployments using Jenkins and Git webhooks
-- Managing manifests and namespaces in Kubernetes
-- Deploying Helm charts for Prometheus & Grafana
-- Observability and metrics visualization
-- Understanding node taints, resource requests, and pod scheduling
+- End-to-End DevOps Pipeline: Built a complete CI/CD workflow — from source code in GitHub to application deployment on Kubernetes.
+- Infrastructure as Code (IaC): Automated AWS infrastructure provisioning using Terraform, followed by Ansible for Kubernetes setup and configuration.
+- Jenkins Automation: Used Jenkins pipelines triggered by Git webhooks to orchestrate both infrastructure creation and application deployment.
+- Containerization & Deployment: Dockerized a Flask application, pushed the image to Docker Hub, and deployed it to Kubernetes clusters using Ansible playbooks.
+- Kubernetes Management: Gained experience managing manifests, namespaces, services, and ingress controllers in Kubernetes.
+- Monitoring & Observability: Deployed Prometheus and Grafana (via Helm charts) for real-time metrics collection and visualization.
+- Cluster Operations: Learned to handle node taints, resource requests/limits, and pod scheduling for better reliability and resource utilization.
 
 ---
 
 
 ## 🗺️ Next Steps (Planned)
 
-- Add custom Grafana dashboards for Flask app metrics  
-- Integrate Alertmanager notifications (Slack or email)  
-- Manage infrastructure with Terraform (IaC)  
+- Integrate Alertmanager notifications (Slack or email) 
 - Deploy to a cloud-managed Kubernetes cluster (EKS / AKS)
 
 ---
