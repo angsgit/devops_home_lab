@@ -93,6 +93,32 @@ This setup represents a **real-world DevOps pipeline** — from code commit to d
  ``` </pre>
 ---
 
+# ☁️ Phase 0 - Infrastructure as Code (IaC)
+
+Before deploying any applications, the foundation infrastructure was fully automated using **Terraform** and **Ansible**, executed through a **Jenkins pipeline**.
+
+
+### ✅ Provision AWS Resources with Terraform
+
+- Creates EC2 instances for master and worker nodes.
+- Configures networking, security groups, and SSH access.
+- Outputs public IPs for dynamic inventory generation.
+
+
+### ⚙️ Configure Kubernetes with Ansible
+
+- Automatically installs and initializes Kubernetes on the master node.
+- Joins worker nodes to the cluster.
+- Sets up required namespaces, metrics server, and ingress controller.
+
+### 🚀 Jenkins Automation
+
+- The Jenkinsfile-infra pipeline handles both Terraform and Ansible execution.
+- Includes a DESTROY_INFRA parameter to optionally tear down AWS resources.
+- When successful, it triggers the app deployment pipeline automatically.
+
+
+--- 
 
 ## 🏗️ Phase 1 - Flask App Setup
 
