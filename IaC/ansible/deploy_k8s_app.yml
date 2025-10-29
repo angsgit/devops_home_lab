@@ -33,6 +33,19 @@
       shell: |
         kubectl --kubeconfig /etc/kubernetes/admin.conf rollout status deployment/{{ app_name }} -n {{ namespace_name }} --timeout=120s
 
+      # ✅ Ensure NGINX Ingress Controller is installed
+    - name: Install NGINX Ingress Controller if missing
+      shell: |
+        if ! kubectl --kubeconfig /etc/kubernetes/admin.conf get ns ingress-nginx >/dev/null 2>&1; then
+          echo "🚀 Installing ingress-nginx controller..."
+          kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
+          echo "⏳ Waiting for ingress controller pods to be ready..."
+          sleep 60
+        else
+          echo "✅ Ingress controller already installed."
+        fi
+
+
     # ✅ Get Ingress Controller NodePort instead of waiting for external IP
     - name: Get NodePort of ingress controller
       shell: |
