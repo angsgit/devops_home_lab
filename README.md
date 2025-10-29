@@ -40,7 +40,7 @@ In future phases, the architecture will expand to include **multi-zone / multi-r
 This setup represents a **real-world DevOps pipeline** — from code commit to deployment and monitoring — running entirely inside a **AWS Kubernetes cluster**.
 
 
-<pre> ```text   ┌────────────────┐
+<pre>        ┌────────────────┐
            │   Developer    │
            │   (Git Push)   │
            └──────┬─────────┘
@@ -93,7 +93,7 @@ This setup represents a **real-world DevOps pipeline** — from code commit to d
  ``` </pre>
 ---
 
-# ☁️ Phase 0 - Infrastructure as Code (IaC)
+### ☁️ Phase 0 - Infrastructure as Code (IaC)
 
 Before deploying any applications, the foundation infrastructure was fully automated using **Terraform** and **Ansible**, executed through a **Jenkins pipeline**.
 
