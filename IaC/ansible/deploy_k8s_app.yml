@@ -45,6 +45,27 @@
           echo "✅ Ingress controller already installed."
         fi
 
+# ✅ Ensure Ingress Controller uses NodePort (avoid AWS LoadBalancer charges)
+    - name: Patch ingress-nginx-controller to NodePort
+      shell: |
+        kubectl --kubeconfig /etc/kubernetes/admin.conf patch svc ingress-nginx-controller \
+          -n ingress-nginx -p '{"spec": {"type": "NodePort"}}'
+      args:
+        warn: false
+      register: patch_result
+      failed_when: patch_result.rc not in [0, 1]
+      changed_when: "'patched' in patch_result.stdout or patch_result.rc == 0"
+
+    # 🧾 Verify service type
+    - name: Verify ingress-nginx service type
+      shell: |
+        kubectl --kubeconfig /etc/kubernetes/admin.conf get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.spec.type}'
+      register: svc_type
+      changed_when: false
+      
+    - debug:
+        msg: "Ingress controller type confirmed as: {{ svc_type.stdout }}"
+
 
     # ✅ Get Ingress Controller NodePort instead of waiting for external IP
     - name: Get NodePort of ingress controller
