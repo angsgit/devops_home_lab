@@ -70,5 +70,6 @@
       delay: 10
       ignore_errors: true
 
-    - name: debug
-      msg: "🌐 Access your app at: http://{{ ingress_address.stdout | default('pending') }}/ (Ingress Host: homelab)"
+    - name: Show final access URL
+      debug:
+        msg: "🌐 Access your app at: http://{{ ingress_address.stdout | default('pending') }}/ (Ingress Host: homelab)"
