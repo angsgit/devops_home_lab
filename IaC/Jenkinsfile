@@ -97,7 +97,7 @@ pipeline {
                         echo "⏳ Waiting for EC2 instances to become SSH-ready..."
                         
                         # Read all IPs from Terraform output JSON
-                        jq -r '. | to_entries[] | .value.value' ../terraform/hosts.json | while read ip; do
+                        jq -r '. | to_entries[] | .value.value' hosts.json | while read ip; do
                             echo "Checking SSH for $ip ..."
                             for i in {1..30}; do
                                 if nc -zv $ip 22 >/dev/null 2>&1; then
