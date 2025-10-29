@@ -83,8 +83,8 @@ This setup represents a **real-world DevOps pipeline** — from code commit to d
         │   Kubernetes (K8s)  │
         │  (App Deployment)   │
         └────────┬────────────┘
-                   │
-                   ▼
+                │
+                ▼
         ┌─────────────────────┐
         │   Prometheus +      │
         │     Grafana         │
