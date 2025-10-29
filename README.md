@@ -252,6 +252,43 @@ pipeline {
 
 ---
 
+## ☁️ Phase 5 - Disaster Recovery (DR)
+
+To ensure high availability and resilience, a Disaster Recovery (DR) strategy was integrated into the AWS DevOps pipeline.  
+All components — infrastructure, configuration, and applications — are reproducible using Infrastructure as Code (IaC).
+
+---
+
+### 🧩 Multi-Region Infrastructure-as-Code
+
+- The Terraform configuration supports **multi-region deployment** by parameterizing the AWS region.
+- Jenkins can deploy to either the **primary** or **secondary (DR)** AWS region.
+
+```hcl
+
+variable "aws_region" {
+  default = "eu-west-1"  # Primary region
+}
+
+provider "aws" {
+  region = var.aws_region
+}
+Deploy to the DR region:
+
+terraform apply -var="aws_region=eu-central-1"
+
+---
+
+### 🪄 Automated Backup & Restore
+
+### **Kubernetes Cluster State**
+- Implemented **Velero** to back up namespaces, deployments, and services to Amazon S3.  
+- Velero can restore these resources to a DR cluster in another region.
+
+```bash
+velero backup create full-cluster-backup --include-namespaces app-v1
+velero restore create --from-backup full-cluster-backup
+
 
 ## 🧠 Key Learnings
 
