@@ -33,21 +33,19 @@
       shell: |
         kubectl --kubeconfig /etc/kubernetes/admin.conf rollout status deployment/{{ app_name }} -n {{ namespace_name }} --timeout=120s
 
-    - name: Wait for Ingress to get hostname
+    - name: Get Ingress host
       shell: |
-        for i in {1..30}; do
-          host=$(kubectl --kubeconfig /etc/kubernetes/admin.conf get ingress {{ app_name }} -n {{ namespace_name }} -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' 2>/dev/null)
-          if [ -n "$host" ]; then echo $host; exit 0; fi
-          echo "Waiting for Ingress hostname... ($i/30)"
-          sleep 5
-        done
-        exit 1
+        kubectl --kubeconfig /etc/kubernetes/admin.conf get ingress {{ app_name }} -n {{ namespace_name }} -o jsonpath='{.spec.rules[0].host}'
       register: ingress_host
-      retries: 5
-      delay: 5
       ignore_errors: true
+
+    - name: Get worker node IP
+      shell: |
+        kubectl --kubeconfig /etc/kubernetes/admin.conf get nodes -o wide | grep worker | awk '{print $6}' | head -n1
+      register: worker_ip
 
     - debug:
         msg: >
-          🌐 Access your app via Ingress at:
-          http://{{ ingress_host.stdout | default('Ingress hostname not yet available') }}
+          🌐 Access your app at:
+          http://{{ worker_ip.stdout }}/
+          (Ingress Host: {{ ingress_host.stdout | default('homelab') }})
