@@ -55,15 +55,27 @@
         dest: /tmp/cri-dockerd
         version: master
 
-    - name: Build and install cri-dockerd
+
+    - name: Install cri-dockerd (prebuilt binary)
       shell: |
-        cd /tmp/cri-dockerd
-        mkdir -p /usr/local/bin
-        make cri-dockerd
-        install -o root -g root -m 0755 cri-dockerd /usr/local/bin/
+        CRI_VERSION=$(curl -s https://api.github.com/repos/Mirantis/cri-dockerd/releases/latest | grep tag_name | cut -d '"' -f 4)
+        wget -q https://github.com/Mirantis/cri-dockerd/releases/download/${CRI_VERSION}/cri-dockerd-${CRI_VERSION#v}.amd64.tgz
+        tar xzf cri-dockerd-*.amd64.tgz
+        install -o root -g root -m 0755 cri-dockerd/cri-dockerd /usr/local/bin/
       args:
-        chdir: /tmp/cri-dockerd
+        chdir: /tmp
         creates: /usr/local/bin/cri-dockerd
+
+#---
+ #   - name: Build and install cri-dockerd
+  #    shell: |
+  #      cd /tmp/cri-dockerd
+   #     mkdir -p /usr/local/bin
+   #     make cri-dockerd
+   #     install -o root -g root -m 0755 cri-dockerd /usr/local/bin/
+   #   args:
+   #     chdir: /tmp/cri-dockerd
+   #     creates: /usr/local/bin/cri-dockerd
 
     - name: Set up systemd service for cri-dockerd
       copy:
