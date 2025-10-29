@@ -39,10 +39,11 @@
       register: ingress_host
       ignore_errors: true
 
-    - name: Get worker node IP
+    - name: Get first external node IP (any role)
       shell: |
-        kubectl --kubeconfig /etc/kubernetes/admin.conf get nodes -o wide | grep worker | awk '{print $6}' | head -n1
+        kubectl --kubeconfig /etc/kubernetes/admin.conf get nodes -o wide | awk 'NR>1 {print $6; exit}'
       register: worker_ip
+
 
     - debug:
         msg: >
