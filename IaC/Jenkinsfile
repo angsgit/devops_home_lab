@@ -168,6 +168,19 @@ pipeline {
             }
         }
 
+            // --------------------------
+        // TRIGGER APP DEPLOY (only if infra is applied)
+        // --------------------------
+        stage('Trigger App Deployment') {
+            when {
+                expression { return params.DESTROY_INFRA == false }
+            }
+            steps {
+                echo "🚀 Infrastructure applied successfully — triggering App Deploy pipeline..."
+                build job: 'app-deploy-aws', wait: false
+            }
+        }
+
        
     }
 
