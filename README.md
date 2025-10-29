@@ -39,48 +39,54 @@ In future phases, the architecture will expand to include **multi-zone / multi-r
 
 This setup represents a **real-world DevOps pipeline** — from code commit to deployment and monitoring — running entirely inside a **local Kubernetes cluster**.
 
-           ┌────────────────┐
-           │   Developer    │
-           │   (Git Push)   │
-           └──────┬─────────┘
-                  │
-                  ▼
-        ┌─────────────────────┐
-        │     GitHub Repo     │
-        │ (Source + Jenkinsfile)
-        └────────┬────────────┘
-                 │ Webhook
-                 ▼
-        ┌─────────────────────┐
-        │       Jenkins       │
-        │  CI/CD Orchestrator │
-        ├─────────────────────┤
-        │ Build Docker Image  │
-        │ Run Unit Tests      │
-        │ Push to Docker Hub  │
-        │ Deploy via kubectl  │
-        └────────┬────────────┘
-                 │
-                 ▼
-        ┌─────────────────────┐
-        │     Docker Hub      │
-        │ (Container Images)  │
-        └────────┬────────────┘
-                 │
-                 ▼
-        ┌─────────────────────┐
-        │   Kubernetes (K8s)  │
-        │  (App Deployment)   │
-        └────────┬────────────┘
-                 │
-                 ▼
-        ┌─────────────────────┐
-        │   Prometheus +      │
-        │     Grafana         │
-        │ (Monitoring Stack)  │
-        └─────────────────────┘
+┌────────────────┐
+│   Developer    │
+│   (Git Push)   │
+└──────┬─────────┘
+       │
+       ▼
+┌─────────────────────┐
+│     GitHub Repo     │
+│ (Source + Jenkinsfile)
+│  + Terraform + Ansible
+└────────┬────────────┘
+         │ Webhook
+         ▼
+┌──────────────────────────────────┐
+│             Jenkins              │
+│        CI/CD Orchestrator        │
+├──────────────────────────────────┤
+│ 1️⃣ Infra Pipeline (IaC)          │
+│    • Terraform → AWS Resources   │
+│    • Ansible → Kubernetes Setup  │
+│    • Triggers App Pipeline       │
+│                                  │
+│ 2️⃣ App Deploy Pipeline           │
+│    • Build Docker Image          │
+│    • Run Unit Tests              │
+│    • Push to Docker Hub          │
+│    • Deploy via Ansible + K8s    │
+└────────┬─────────────────────────┘
+         │
+         ▼
+┌─────────────────────┐
+│     Docker Hub      │
+│ (Container Images)  │
+└────────┬────────────┘
+         │
+         ▼
+┌─────────────────────┐
+│   Kubernetes (K8s)  │
+│  (App Deployment)   │
+└────────┬────────────┘
+         │
+         ▼
+┌─────────────────────┐
+│   Prometheus +      │
+│     Grafana         │
+│ (Monitoring Stack)  │
+└─────────────────────┘
 
-![DEPLOYED APP](documentation/screenshots/diagram.png)
 ---
 
 
