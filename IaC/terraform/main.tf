@@ -121,7 +121,7 @@ resource "aws_security_group" "main_sg" {
 # --- Kubernetes Control Plane Node ---
 resource "aws_instance" "k8s_master" {
   ami                    = "ami-0bc691261a82b32bc" # Ubuntu 22.04 LTS (eu-west-1)
-  instance_type          = "t3.medium"
+  instance_type          = "t3.micro"
   key_name               = "angs-key"
   subnet_id              = aws_subnet.main_subnet.id
   vpc_security_group_ids = [aws_security_group.main_sg.id]
@@ -135,7 +135,7 @@ resource "aws_instance" "k8s_master" {
 # --- Kubernetes Worker Node 1 ---
 resource "aws_instance" "k8s_worker1" {
   ami                    = "ami-0bc691261a82b32bc"
-  instance_type          = "t3.medium"
+  instance_type          = "t3.micro"
   key_name               = "angs-key"
   subnet_id              = aws_subnet.main_subnet.id
   vpc_security_group_ids = [aws_security_group.main_sg.id]
@@ -149,7 +149,7 @@ resource "aws_instance" "k8s_worker1" {
 # --- Kubernetes Worker Node 2 ---
 resource "aws_instance" "k8s_worker2" {
   ami                    = "ami-0bc691261a82b32bc"
-  instance_type          = "t3.medium"
+  instance_type          = "t3.micro"
   key_name               = "angs-key"
   subnet_id              = aws_subnet.main_subnet.id
   vpc_security_group_ids = [aws_security_group.main_sg.id]
